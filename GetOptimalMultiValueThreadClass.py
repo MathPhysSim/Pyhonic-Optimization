@@ -27,45 +27,64 @@ class getOptimalMultiValueThread(QThread):
 
         QThread.__init__(self)
 
-        self.parameterEvolution = pd.DataFrame(
-                index=['ei.v10', 'ei.v20', 'ei.h10', 'ei.h20-inj'])
-
-        self.injIntensityEvolution = []
         self.ob = observableParameter
         self.parameterClass = parameterClass
+        index = self.parameterClass.getNames()
+        index.append("intensity")
+        self.parameterEvolution = pd.DataFrame(
+                index=index)
+
         self.cancelFlag = False
         self.signals = CommuticatorSingals()
         self.nrCalls = 0
-        self.startValues = np.array(self.parameterClass.getValues())
-        self.parameterEvolution[0] = self.startValues
+        self.startValues = np.array(self.parameterClass.getStartVector())
+        self.updateData(self.startValues, np.nan)
 
         self.xTol = xTol
         self.fTol = fTol
         self.algorithmSelection = algorithmSelection
 
+    def updateData(self, x, intensityValue):
+        print("update", self.nrCalls)
+        self.parameterEvolution[self.nrCalls] = np.nan
+        print("update1", self.nrCalls)
+        self.parameterEvolution.iloc[:-1,
+                                     self.nrCalls] = x
+        print("update2", self.nrCalls)
+        self.parameterEvolution.iloc[-1,
+                                     self.nrCalls] = intensityValue
+        print(self.parameterEvolution)
+        print("update")
+
     def __del__(self):
         self.wait()
 
     def run(self):
+        print("run")
         self.signals.setSubscribtion.emit(True)
         x0 = self.startValues
+        print(self.parameterClass.getStartDirection())
         if self.algorithmSelection == 'Powell':
             res = optimize.fmin_powell(self._func_obj, x0, xtol=self.xTol,
-                                   ftol=self.fTol,
-                                   direc=np.array([[1e-4, 0., 0., 0.],
-                                                  [0, 1e-4, 0., 0.],
-                                                  [0, 0, 1e-4, 0.],
-                                                  [0, 0, 0, 1e-4]]))
+                                       ftol=self.fTol,
+                                       direc=self.parameterClass.
+                                       getStartDirection())
+            if (len(res.shape) < 0) | (type(res)==float):
+                res = np.array([res])
+            returnValue = res
         else:
             res = optimize.minimize(self._func_obj, x0, method='Nelder-Mead',
-                                      options={'xatol': self.xTol,
-                                      'fatol': self.fTol})
-        self.signals.setValues.emit(res.tolist())
+                                    options={'xatol': self.xTol,
+                                             'fatol': self.fTol})
+            returnValue = res.x
+        self.signals.setValues.emit(returnValue.tolist())
         self.signals.jobFinished.emit()
         self.signals.setSubscribtion.emit(False)
 
     def _func_obj(self, x):
+        print("run fun")
         self.signals.setValues.emit(x.tolist())
+        self.ob.reset()
         while(self.ob.dataWait):
             if self.cancelFlag:
                 self.signals.setSubscribtion.emit(False)
@@ -74,8 +93,8 @@ class getOptimalMultiValueThread(QThread):
         self.ob.dataWait = True
         dataFinal = self.ob.dataOut
         self.nrCalls += 1
-        self.parameterEvolution[self.nrCalls] = x-self.parameterEvolution[0]
-        self.injIntensityEvolution.append((-1) * self.ob.dataOut)
+        self.updateData(x-self.parameterEvolution.iloc[:-1, 0],
+                        (-1) * self.ob.dataOut)
         self.signals.drawNow.emit()
-
+        print("run fun1")
         return dataFinal

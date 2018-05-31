@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Tue May 29 18:21:55 2018
+
+@author: shirlaen
+"""
+
+import pyjapc
+import ParameterSetting as pc
+
+
+
+
+
+
+class ListSelector():
+
+    parameterList = {"EI.BVN10/K": "rmi://virtual_sps/logical.EI.BVN10/K",
+                     "EI.BVN20/K": "rmi://virtual_sps/logical.EI.BVN20/K",
+                     "EI.BHN10/K": "rmi://virtual_sps/logical.EI.BHN10/K",
+                     "ETL.BHN20-INJ/K":
+                         "rmi://virtual_sps/logical.ETL.BHN20-INJ/K",
+                         "ITH.DHZ10/K":
+                             "rmi://virtual_sps/logical.ITH.DHZ10/K",
+                         "ITH.DHZ11/K":
+                             "rmi://virtual_sps/logical.ITH.DHZ11/K",
+                         "ITH.DHZ21/K":
+                             "rmi://virtual_sps/logical.ITH.DHZ21/K",
+                         "ITE.BHN10/K":
+                             "rmi://virtual_sps/logical.ITE.BHN10/K",
+                         "ITE.BHN20/K":
+                             "rmi://virtual_sps/logical.ITE.BHN20/K",
+                         "ITE.BHN30/K":
+                             "rmi://virtual_sps/logical.ITE.BHN30/K",
+                         "ITE.BHN40-IN-LEI/K":
+                             "rmi://virtual_sps/logical.ITE.BHN40-IN-LEI/K",
+                         "ETL.DHN10-INJ/K":
+                             "rmi://virtual_sps/logical.ETL.DHN10-INJ/K",
+                         "ITH.DVT10/K":
+                             "rmi://virtual_sps/logical.ITH.DVT10/K",
+                         "ITH.DVT11/K":
+                             "rmi://virtual_sps/logical.ITH.DVT11/K",
+                         "ITH.DVT21/K":
+                             "rmi://virtual_sps/logical.ITH.DVT21/K",
+                         "ETL.BVN10-INJ/K":
+                         "rmi://virtual_sps/logical.ETL.BVN10-INJ/K",
+                         "ETL.BVN20-INJ/K":
+                         "rmi://virtual_sps/logical.ETL.BVN20-INJ/K"
+                             }
+    markedItems = {"EI.BVN10/K", "EI.BVN20/K", "EI.BHN10/K"}
+
+    def getItems(self):
+        return self.parameterList.keys()
+
+    def getSelectedItemsNames(self):
+        return [self.parameterList[key] for key in self.selectionList]
+
+    def getSelectedItemsDict(self):
+        return {key: self.parameterList[key] for key in self.selectionList}
+
+    def __init__(self):
+        self.selectionList = []
+
+    def setSelection(self, selectedItems):
+        self.selectionList = selectedItems
+        
+        
+        
+        
+        
+        
+        
+japc = pyjapc.PyJapc(incaAcceleratorName="LEIR", noSet=False)
+japc.setSelector("LEI.USER.EARLY")
+
+parameterClass = pc.ParameterClass(japc)
+listSelector = ListSelector()
+listSelector.setSelection(["ETL.BHN20-INJ/K"])
+parameterClass.addParameters(listSelector.getSelectedItemsDict())
+print("out")
+print(parameterClass.getValues())
+parameterClass.setNewValues(parameterClass.getValues())
+
+        

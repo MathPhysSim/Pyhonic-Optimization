@@ -429,7 +429,7 @@
    </palette>
   </property>
   <property name="windowTitle">
-   <string>Injection Optimizer V 0.0.1</string>
+   <string>Injection Optimizer V 0.0.2</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -456,26 +456,6 @@
     </item>
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="runOptimizationButton">
-        <property name="text">
-         <string>Start</string>
-        </property>
-       </widget>
-      </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
@@ -584,6 +564,33 @@
        </layout>
       </item>
       <item>
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Selected parameters</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QListWidget" name="listWidget">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::MultiSelection</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="runOptimizationButton">
+        <property name="text">
+         <string>Start</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="buttonRestoreOldValues">
         <property name="text">
          <string>Restore old values</string>
@@ -632,7 +639,7 @@
        </widget>
       </item>
       <item>
-       <spacer name="verticalSpacer_2">
+       <spacer name="verticalSpacer">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
