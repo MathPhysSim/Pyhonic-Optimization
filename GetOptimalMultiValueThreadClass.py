@@ -45,22 +45,19 @@ class getOptimalMultiValueThread(QThread):
         self.algorithmSelection = algorithmSelection
 
     def updateData(self, x, intensityValue):
-        print("update", self.nrCalls)
         self.parameterEvolution[self.nrCalls] = np.nan
-        print("update1", self.nrCalls)
         self.parameterEvolution.iloc[:-1,
                                      self.nrCalls] = x
-        print("update2", self.nrCalls)
         self.parameterEvolution.iloc[-1,
                                      self.nrCalls] = intensityValue
         print(self.parameterEvolution)
-        print("update")
 
     def __del__(self):
         self.wait()
 
     def run(self):
-        print("run")
+        print(self.xTol)
+        print(self.fTol)
         self.signals.setSubscribtion.emit(True)
         x0 = self.startValues
         print(self.parameterClass.getStartDirection())
@@ -69,7 +66,7 @@ class getOptimalMultiValueThread(QThread):
                                        ftol=self.fTol,
                                        direc=self.parameterClass.
                                        getStartDirection())
-            if (len(res.shape) < 0) | (type(res)==float):
+            if (len(res.shape) < 0) | (type(res) == float):
                 res = np.array([res])
             returnValue = res
         else:
@@ -82,7 +79,6 @@ class getOptimalMultiValueThread(QThread):
         self.signals.setSubscribtion.emit(False)
 
     def _func_obj(self, x):
-        print("run fun")
         self.signals.setValues.emit(x.tolist())
         self.ob.reset()
         while(self.ob.dataWait):
@@ -96,5 +92,4 @@ class getOptimalMultiValueThread(QThread):
         self.updateData(x-self.parameterEvolution.iloc[:-1, 0],
                         (-1) * self.ob.dataOut)
         self.signals.drawNow.emit()
-        print("run fun1")
         return dataFinal

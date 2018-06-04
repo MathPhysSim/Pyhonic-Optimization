@@ -21,7 +21,7 @@ class ObservableClass():
     def setValue(self, x):
 #        normVal = self.japc.getParam("ITL.BCT05/Acquisition")
         self.valueList.append(x)
-        if len(self.valueList) > self.dataLength:
+        if len(self.valueList) >= self.dataLength:
             cleanData = self.valueList
             if len(cleanData) > 2:
                 cleanData = np.sort(np.array(cleanData))[2:]

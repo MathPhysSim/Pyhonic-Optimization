@@ -17,7 +17,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     japc = pyjapc.PyJapc(incaAcceleratorName="LEIR", noSet=False)
     japc.setSelector("LEI.USER.EARLY")
-
+    japc.rbacLogin()
     averageNrValue = 5.
     parameterClass = pc.ParameterClass(japc)
     algorithmSelection = 'Powell'
@@ -139,7 +139,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     def setValues(self, x):
         print(x)
-#        self.parameterClass.setNewValues(x)
+        self.parameterClass.setNewValues(x)
 
     def done(self):
         print("DONE")

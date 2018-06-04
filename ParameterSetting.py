@@ -30,7 +30,7 @@ class ParameterClass():
         return startVector
 
     def getStartDirection(self):
-        return np.diag([1 for ii in range(len(self.memberParameters))])
+        return np.diag([1e-4 for ii in range(len(self.memberParameters))])
 
     def setNewValues(self, x):
         x = np.array(x)
@@ -38,8 +38,10 @@ class ParameterClass():
         xReal = []
         xSet = []
         for ii, key in enumerate(self.memberParameters):
-            print(x[ii])
+            print("Try...................................")
+            print(key)
             print(self.memberParameters[key].getValue())
+            print(x[ii])
             self.memberParameters[key].setValue(x[ii])
             xReal.append(self.memberParameters[key].getValue())
             xSet.append(x[ii])
@@ -109,8 +111,10 @@ class constFunctionClass():
         Qtrim[np.where((np.array(time) >= self.t[0]) &
                        (np.array(time) <= self.t[1]))] = setValue
         app.getDiscreteFunction().yArray = Qtrim
-        self.japc.setParam(self.elementName, app,
+        try:
+            self.japc.setParam(self.elementName, app,
                            dimcheck=True)
+        except:
 
 
 class scalarClass():

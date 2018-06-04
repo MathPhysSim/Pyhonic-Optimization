@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Jun  1 17:36:55 2018
+
+@author: shirlaen
+"""
+
+import pyjapc
+
+name = "rmi://virtual_leir/logical.ITH.DHZ10/K"
+japc = pyjapc.PyJapc(incaAcceleratorName="LEIR", noSet=False)
+japc.setSelector("LEI.USER.EARLY")
+japc.rbacLogin(loginDialog=True)
+
+def getValue():
+    knobParam = japc.getParam(name,
+                                       noPyConversion=True,
+                                       timingSelectorOverride=
+                                       japc.getSelector()).getValue()
+    returnValue = knobParam.double
+    return returnValue
+
+def setValue(x):
+    knobParam = japc.getParam(name,
+                                       noPyConversion=True,
+                                       timingSelectorOverride=
+                                       japc.getSelector()).getValue()
+    knobParam.double = x
+    print()
+    japc.setParam(name, knobParam)
+    return None
+
+
+print(getValue())
+setValue(getValue())

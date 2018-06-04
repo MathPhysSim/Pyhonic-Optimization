@@ -95,8 +95,10 @@ parameterClass = pc.ParameterClass(japc)
 
 
 ls = ListSelector()
-ls.setSelection(["ETL.GSBHN10/KICK", "ETL.BVN20-INJ/K"])
-
+ls.setSelection(["ITH.DVT10/K"])
+japc.rbacLogin(loginDialog=True)
 parameterClass.addParameters(ls.getSelectedItemsDict())
-
-parameterClass.setNewValues(parameterClass.getValues())
+print("Current Value")
+print(parameterClass.getValues())
+setValue = parameterClass.getValues()
+parameterClass.setNewValues(setValue)
