@@ -1,0 +1,14 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Jun  6 06:55:06 2018
+
+@author: shirlaen
+"""
+
+import matplotlib.pyplot as plt
+
+fig, ax = plt.subplots(1)
+
+plt.ylabel('intensity $\frac{EI}{EE}$\
+                                                (1)')

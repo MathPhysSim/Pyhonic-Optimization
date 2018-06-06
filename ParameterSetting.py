@@ -30,25 +30,16 @@ class ParameterClass():
         return startVector
 
     def getStartDirection(self):
-        return np.diag([1e-4 for ii in range(len(self.memberParameters))])
+        return np.diag([5e-4 for ii in range(len(self.memberParameters))])
 
     def setNewValues(self, x):
         x = np.array(x)
-        print("Set values in class")
         xReal = []
         xSet = []
         for ii, key in enumerate(self.memberParameters):
-            print("Try...................................")
-            print(key)
-            print(self.memberParameters[key].getValue())
-            print(x[ii])
             self.memberParameters[key].setValue(x[ii])
             xReal.append(self.memberParameters[key].getValue())
             xSet.append(x[ii])
-            print("GetSet...................................")
-            print(xSet)
-            print(xReal)
-            print("GetSet...................................")
 
     def getValues(self):
         xOut = []
@@ -63,18 +54,18 @@ class ParameterClass():
 class parameterObject():
 
     def __init__(self, japcIn, parameterNameDict):
-        print("success para0")
+
         self.japc = japcIn
         self.parameterName = parameterNameDict['name']
         self.parameterType = parameterNameDict['type']
-        print("success para1")
+
         if self.parameterType == 'function':
             self.object = constFunctionClass(japcIn, self.parameterName,
                                              parameterNameDict['time'])
         else:
             self.object = scalarClass(japcIn, self.parameterName)
         self.x0 = self.getValue()
-        print("success para2")
+
     def getValue(self):
         return self.object.getValue()
 
@@ -113,8 +104,9 @@ class constFunctionClass():
         app.getDiscreteFunction().yArray = Qtrim
         try:
             self.japc.setParam(self.elementName, app,
-                           dimcheck=True)
-        except:
+                               dimcheck=True)
+        except Exception as e:
+            print(e.stacktrace())
 
 
 class scalarClass():

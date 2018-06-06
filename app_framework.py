@@ -10,6 +10,8 @@ import pyjapc
 import ParameterSetting as pc
 import ObservableClass as ob
 import GetOptimalMultiValueThreadClass as gOVThread
+import ListSelectorClass as lsclass
+
 from sceleton import Ui_MainWindow
 
 
@@ -17,7 +19,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     japc = pyjapc.PyJapc(incaAcceleratorName="LEIR", noSet=False)
     japc.setSelector("LEI.USER.EARLY")
-    japc.rbacLogin()
+#    japc.rbacLogin()
     averageNrValue = 5.
     parameterClass = pc.ParameterClass(japc)
     algorithmSelection = 'Powell'
@@ -60,7 +62,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.buttonGroup.buttonClicked.connect(self.buttonGroupSelected)
         self.algorithmSelection = self.buttonGroup.checkedButton().text()
 
-        self.listSelector = ListSelector()
+        self.listSelector = lsclass.ListSelector()
 
         for itemName in self.listSelector.getItems():
             item = QListWidgetItem(itemName)
@@ -101,7 +103,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.ob.dataLength = self.averageNrValue
 
     def onValueRecieved(self, parameterName, newValue):
-        self.ob.setValue(np.abs(newValue[395]) * (-1.))  # /normVal
+        self.ob.setValue(np.abs(np.mean(newValue[395:395+300])) * (-1.))  # /normVal
 #        print('subscibtionRuns')
 
     def runOptimization(self):
@@ -157,23 +159,20 @@ class MyApp(QMainWindow, Ui_MainWindow):
             self.japc.stopSubscriptions()
 
     def visualizeData(self):
-#        print("Main draw.......................................")
-#        print(self.getOptimalValueThread.injIntensityEvolution)
+
         plotFrame = self.getOptimalValueThread.parameterEvolution.iloc[:, 1:].T
         self.plotWidget.canvas.axs[1].clear()
         self.plotWidget.canvas.axs[0].clear()
         if plotFrame.shape[0] > 1:
             plotFrame.iloc[:, :-1].plot(ax=self.plotWidget.canvas.axs[0])
             plotFrame.iloc[:, -1].plot(ax=self.plotWidget.canvas.axs[1])
-#        print("Main draw.........................")
-#        print(plotFrame)
 
         self.plotWidget.canvas.axs[0].set_title('Parameter evolution')
         self.plotWidget.canvas.axs[1].set_title('Intensity')
         self.plotWidget.canvas.axs[0].set_xlabel('Nr of changes')
         self.plotWidget.canvas.axs[1].set_xlabel('Nr of changes')
         self.plotWidget.canvas.axs[0].set_ylabel('parameters (a.u.)')
-        self.plotWidget.canvas.axs[1].set_ylabel('intensity (10e10 c.)')
+        self.plotWidget.canvas.axs[1].set_ylabel('ER-EI efficiency')
 
         self.plotWidget.canvas.fig.tight_layout()
         self.plotWidget.canvas.draw()
@@ -187,90 +186,3 @@ class MyApp(QMainWindow, Ui_MainWindow):
             event.accept()
         else:
             event.ignore()
-
-
-class ListSelector():
-
-    parameterList = {"EI.BVN10/K":
-                     {"name": "rmi://virtual_sps/logical.EI.BVN10/K",
-                      "type": "scalar"},
-                     "EI.BVN20/K":
-                         {"name": "rmi://virtual_sps/logical.EI.BVN20/K",
-                          "type": "scalar"},
-                     "EI.BHN10/K":
-                         {"name": "rmi://virtual_sps/logical.EI.BHN10/K",
-                          "type": "scalar"},
-                     "ETL.BHN20-INJ/K":
-                         {"name": "rmi://virtual_sps/logical.ETL.BHN20-INJ/K",
-                          "type": "scalar"},
-                         "ITH.DHZ10/K":
-                             {"name": "rmi://virtual_sps/logical.ITH.DHZ10/K",
-                              "type": "scalar"},
-                         "ITH.DHZ11/K":
-                             {"name": "rmi://virtual_sps/logical.ITH.DHZ11/K",
-                              "type": "scalar"},
-                         "ITH.DHZ21/K":
-                             {"name": "rmi://virtual_sps/logical.ITH.DHZ21/K",
-                              "type": "scalar"},
-                         "ITE.BHN10/K":
-                             {"name": "rmi://virtual_sps/logical.ITE.BHN10/K",
-                              "type": "scalar"},
-                         "ITE.BHN20/K":
-                             {"name": "rmi://virtual_sps/logical.ITE.BHN20/K",
-                              "type": "scalar"},
-                         "ITE.BHN30/K":
-                             {"name": "rmi://virtual_sps/logical.ITE.BHN30/K",
-                              "type": "scalar"},
-                         "ITE.BHN40-IN-LEI/K":
-                             {"name": "rmi://virtual_sps/logical.ITE.BHN40-IN-LEI/K",
-                              "type": "scalar"},
-                         "ETL.DHN10-INJ/K":
-                             {"name": "rmi://virtual_sps/logical.ETL.DHN10-INJ/K",
-                              "type": "scalar"},
-                         "ITH.DVT10/K":
-                             {"name": "rmi://virtual_sps/logical.ITH.DVT10/K",
-                              "type": "scalar"},
-                         "ITH.DVT11/K":
-                             {"name": "rmi://virtual_sps/logical.ITH.DVT11/K",
-                              "type": "scalar"},
-                         "ITH.DVT21/K":
-                             {"name": "rmi://virtual_sps/logical.ITH.DVT21/K",
-                              "type": "scalar"},
-                         "ETL.BVN10-INJ/K":
-                             {"name": "rmi://virtual_sps/logical.ETL.BVN10-INJ/K",
-                              "type": "scalar"},
-                         "ETL.BVN20-INJ/K":
-                         {"name": "rmi://virtual_sps/logical.ETL.BVN20-INJ/K",
-                          "type": "scalar"},
-                         "ETL.GSBHN10/KICK":
-                             {"name": "rmi://virtual_leir/ETL.GSBHN10/KICK",
-                              "type": "function", "time": [110, 660]},
-                          "LEIRBEAM/injectionBump_CTRS10_H_1mm":
-                             {"name": "rmi://virtual_leir/LEIRBEAM/injectionBump_CTRS10_H_1mm",
-                              "type": "function", "time": [200, 750]},
-                          "LEIRBEAM/injectionBump_CTRS10_H_1mrad":
-                             {"name": "rmi://virtual_leir/LEIRBEAM/injectionBump_CTRS10_H_1mrad",
-                              "type": "function", "time": [200, 750]},
-                          "LEIRBEAM/injectionBump_CTRS10_V_1mm":
-                             {"name": "rmi://virtual_leir/LEIRBEAM/injectionBump_CTRS10_H_1mrad",
-                              "type": "function", "time": [200, 650]},
-                           "LEIRBEAM/injectionBump_CTRS10_V_1mrad":
-                             {"name": "rmi://virtual_leir/LEIRBEAM/injectionBump_CTRS10_V_1mrad",
-                              "type": "function", "time": [200, 650]}
-                             }
-    markedItems = {"EI.BVN10/K", "EI.BVN20/K", "EI.BHN10/K"}
-
-    def getItems(self):
-        return self.parameterList.keys()
-
-    def getSelectedItemsNames(self):
-        return [self.parameterList[key] for key in self.selectionList]
-
-    def getSelectedItemsDict(self):
-        return {key: self.parameterList[key] for key in self.selectionList}
-
-    def __init__(self):
-        self.selectionList = []
-
-    def setSelection(self, selectedItems):
-        self.selectionList = selectedItems

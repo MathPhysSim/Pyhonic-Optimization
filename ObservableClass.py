@@ -19,8 +19,9 @@ class ObservableClass():
         self.dataLength = length
 
     def setValue(self, x):
-#        normVal = self.japc.getParam("ITL.BCT05/Acquisition")
-        self.valueList.append(x)
+        normVal = self.japc.getParam("EI.BCT10/Acquisition#chargesLinacSingle")
+        if normVal > 2:
+            self.valueList.append(x/normVal)
         if len(self.valueList) >= self.dataLength:
             cleanData = self.valueList
             if len(cleanData) > 2:
