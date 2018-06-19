@@ -10,7 +10,7 @@ import numpy as np
 import pyjapc
 import ParameterSetting as pc
 
-
+import ListSelectorClass as lsclass
 
 
 japc = pyjapc.PyJapc(incaAcceleratorName="LEIR", noSet=False)
@@ -19,10 +19,10 @@ parameterClass = pc.ParameterClass(japc)
 
 
 ls = lsclass.ListSelector()
-ls.setSelection(["LEIRBEAM/coolerBump_CTRS20_H_1mrad"])
+ls.setSelection(["LEIRBEAM/coolerBump_CTRS20_H_1mm"])
 # japc.rbacLogin(loginDialog=True)
 parameterClass.addParameters(ls.getSelectedItemsDict())
 print("Current Value")
 print(parameterClass.getValues())
 setValue = parameterClass.getValues()
-parameterClass.setNewValues(setValue)
+#parameterClass.setNewValues(setValue)

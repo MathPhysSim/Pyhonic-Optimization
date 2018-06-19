@@ -62,6 +62,9 @@ class parameterObject():
         if self.parameterType == 'function':
             self.object = constFunctionClass(japcIn, self.parameterName,
                                              parameterNameDict['time'])
+        elif self.parameterType == 'functionSquare':
+            self.object = squareFunctionClass(japcIn, self.parameterName,
+                                             parameterNameDict['time'])
         else:
             self.object = scalarClass(japcIn, self.parameterName)
         self.x0 = self.getValue()
@@ -132,3 +135,79 @@ class scalarClass():
         knobParam.double = x
         self.japc.setParam(self.parameterName, knobParam)
         return None
+
+class squareFunctionClass():
+#    t1 = 200
+#    t2 = 1850
+
+    def __init__(self, japcIn, elementName, t):
+
+        self.japc = japcIn
+        self.elementName = elementName
+        self.t = t
+        self.initiate = False
+
+    def initiateValues(self):
+        app = self.japc.getParam(self.elementName,
+                                 noPyConversion=True).getValue()
+        time = np.array(app.getDiscreteFunction().xArray, dtype=float)
+        Qtrim = np.array(app.getDiscreteFunction().yArray, dtype=float)
+        print('here......................................................')
+        print(time)
+        print(Qtrim)
+        delta = 10.
+        timeLim = self.t[0]
+        if not(timeLim in time):
+            time = np.insert(time, np.where(time > timeLim)[0][0], timeLim)
+        timeLim = max([self.t[0] - delta, 0])
+        if not(timeLim in time):
+            time = np.insert(time, np.where(time > timeLim)[0][0], timeLim)
+
+        timeLim = self.t[1]
+        if not(timeLim in time):
+            time = np.insert(time, np.where(time > timeLim)[0][0], timeLim)
+        timeLim = self.t[1] + delta
+        if not(timeLim in time):
+            time = np.insert(time, np.where(time > timeLim)[0][0], timeLim)
+
+        Qtrim = np.interp(time, np.array(app.getDiscreteFunction().xArray,
+                                         dtype=float), Qtrim)
+        print('here......................................................')
+        print(time)
+        print(Qtrim)
+        
+        app.getDiscreteFunction().yArray = Qtrim
+        app.getDiscreteFunction().xArray = time
+
+        try:
+            self.japc.setParam(self.elementName, app,
+                               dimcheck=True)
+            self.initiate = True
+        except Exception as e:
+            print(e.stacktrace())
+
+    def getValue(self):
+        if not(self.initiate):
+            self.initiateValues() 
+        app = self.japc.getParam(self.elementName,
+                                 noPyConversion=True).getValue()
+        time = np.array(app.getDiscreteFunction().xArray)
+        Qtrim = np.array(app.getDiscreteFunction().yArray)
+        ind_select = np.where(
+                (np.array(time) >= self.t[0]) & (np.array(time) <= self.t[1]))
+
+        return Qtrim[ind_select][0]
+
+    def setValue(self, setValue):
+        app = self.japc.getParam(self.elementName,
+                                 noPyConversion=True).getValue()
+        time = app.getDiscreteFunction().xArray
+        Qtrim = np.array(app.getDiscreteFunction().yArray)
+        Qtrim[np.where((np.array(time) >= self.t[0]) &
+                       (np.array(time) <= self.t[1]))] = setValue
+        app.getDiscreteFunction().yArray = Qtrim
+        try:
+            self.japc.setParam(self.elementName, app,
+                               dimcheck=True)
+        except Exception as e:
+            print(e.stacktrace())

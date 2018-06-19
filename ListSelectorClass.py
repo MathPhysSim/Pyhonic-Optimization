@@ -76,16 +76,16 @@ class ListSelector():
                               "type": "function", "time": [200, 650]},
                            "LEIRBEAM/coolerBump_CTRS20_H_1mm":
                              {"name": "rmi://virtual_leir/LEIRBEAM/coolerBump_CTRS20_H_1mm",
-                              "type": "function", "time": [200, 1850]},
+                              "type": "functionSquare", "time": [200, 650]},
                             "LEIRBEAM/coolerBump_CTRS20_H_1mrad":
                              {"name": "rmi://virtual_leir/LEIRBEAM/coolerBump_CTRS20_H_1mrad",
-                              "type": "function", "time": [200, 1400]},
+                              "type": "function", "time": [200, 650]},
                             "LEIRBEAM/coolerBump_CTRS20_V_1mm":
                              {"name": "rmi://virtual_leir/LEIRBEAM/coolerBump_CTRS20_V_1mm",
-                              "type": "function", "time": [200, 1850]},
+                              "type": "function", "time": [200, 650]},
                              "LEIRBEAM/coolerBump_CTRS20_V_1mrad":
                              {"name": "rmi://virtual_leir/LEIRBEAM/coolerBump_CTRS20_V_1mrad",
-                              "type": "function", "time": [200, 1850]}
+                              "type": "function", "time": [200, 650]}
                              }
     markedItems = {"EI.BVN10/K", "EI.BVN20/K", "EI.BHN10/K"}
 
