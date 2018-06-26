@@ -19,10 +19,11 @@ parameterClass = pc.ParameterClass(japc)
 
 
 ls = lsclass.ListSelector()
-ls.setSelection(["LEIRBEAM/coolerBump_CTRS20_H_1mm"])
+ls.setSelection(["ETL.GSBHN10/KICK"])
 # japc.rbacLogin(loginDialog=True)
 parameterClass.addParameters(ls.getSelectedItemsDict())
 print("Current Value")
 print(parameterClass.getValues())
 setValue = parameterClass.getValues()
-#parameterClass.setNewValues(setValue)
+parameterClass.setNewValues((setValue-.0001))
+print(parameterClass.getValues())

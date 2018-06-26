@@ -8,7 +8,8 @@ Created on Tue Jun  5 21:30:16 2018
 
 class ListSelector():
 
-    parameterList = {"EI.BVN10/K":
+    parameterList = {
+                    "EI.BVN10/K":
                      {"name": "rmi://virtual_sps/logical.EI.BVN10/K",
                       "type": "scalar"},
                      "EI.BVN20/K":
@@ -29,21 +30,21 @@ class ListSelector():
                          "ITH.DHZ21/K":
                              {"name": "rmi://virtual_sps/logical.ITH.DHZ21/K",
                               "type": "scalar"},
-                         "ITE.BHN10/K":
-                             {"name": "rmi://virtual_sps/logical.ITE.BHN10/K",
-                              "type": "scalar"},
-                         "ITE.BHN20/K":
-                             {"name": "rmi://virtual_sps/logical.ITE.BHN20/K",
-                              "type": "scalar"},
-                         "ITE.BHN30/K":
-                             {"name": "rmi://virtual_sps/logical.ITE.BHN30/K",
-                              "type": "scalar"},
-                         "ITE.BHN40-IN-LEI/K":
-                             {"name": "rmi://virtual_sps/logical.ITE.BHN40-IN-LEI/K",
-                              "type": "scalar"},
-                         "ETL.DHN10-INJ/K":
-                             {"name": "rmi://virtual_sps/logical.ETL.DHN10-INJ/K",
-                              "type": "scalar"},
+#                         "ITE.BHN10/K":
+#                             {"name": "rmi://virtual_sps/logical.ITE.BHN10/K",
+#                              "type": "scalar"},
+#                         "ITE.BHN20/K":
+#                             {"name": "rmi://virtual_sps/logical.ITE.BHN20/K",
+#                              "type": "scalar"},
+#                         "ITE.BHN30/K":
+#                             {"name": "rmi://virtual_sps/logical.ITE.BHN30/K",
+#                              "type": "scalar"},
+#                         "ITE.BHN40-IN-LEI/K":
+#                             {"name": "rmi://virtual_sps/logical.ITE.BHN40-IN-LEI/K",
+#                              "type": "scalar"},
+#                         "ETL.DHN10-INJ/K":
+#                             {"name": "rmi://virtual_sps/logical.ETL.DHN10-INJ/K",
+#                              "type": "scalar"},
                          "ITH.DVT10/K":
                              {"name": "rmi://virtual_sps/logical.ITH.DVT10/K",
                               "type": "scalar"},
@@ -53,39 +54,39 @@ class ListSelector():
                          "ITH.DVT21/K":
                              {"name": "rmi://virtual_sps/logical.ITH.DVT21/K",
                               "type": "scalar"},
-                         "ETL.BVN10-INJ/K":
-                             {"name": "rmi://virtual_sps/logical.ETL.BVN10-INJ/K",
-                              "type": "scalar"},
-                         "ETL.BVN20-INJ/K":
-                         {"name": "rmi://virtual_sps/logical.ETL.BVN20-INJ/K",
-                          "type": "scalar"},
+#                         "ETL.BVN10-INJ/K":
+#                             {"name": "rmi://virtual_sps/logical.ETL.BVN10-INJ/K",
+#                              "type": "scalar"},
+#                         "ETL.BVN20-INJ/K":
+#                         {"name": "rmi://virtual_sps/logical.ETL.BVN20-INJ/K",
+#                          "type": "scalar"},
                          "ETL.GSBHN10/KICK":
                              {"name": "rmi://virtual_leir/ETL.GSBHN10/KICK",
-                              "type": "function", "time": [110, 660]},
+                             "type": "function", "time": [110, 660]},
                           "LEIRBEAM/injectionBump_CTRS10_H_1mm":
                              {"name": "rmi://virtual_leir/LEIRBEAM/injectionBump_CTRS10_H_1mm",
-                              "type": "function", "time": [200, 750]},
+                              "type": "functionSquare", "time": [200, 650], "delta": 100., "range": [100,1950]},
                           "LEIRBEAM/injectionBump_CTRS10_H_1mrad":
                              {"name": "rmi://virtual_leir/LEIRBEAM/injectionBump_CTRS10_H_1mrad",
-                              "type": "function", "time": [200, 750]},
+                              "type": "functionSquare", "time": [200, 650], "delta": 100., "range": [100,1950]},
                           "LEIRBEAM/injectionBump_CTRS10_V_1mm":
                              {"name": "rmi://virtual_leir/LEIRBEAM/injectionBump_CTRS10_H_1mrad",
-                              "type": "function", "time": [200, 650]},
+                              "type": "functionSquare", "time": [200, 650], "delta": 100., "range": [100,1950]},
                            "LEIRBEAM/injectionBump_CTRS10_V_1mrad":
                              {"name": "rmi://virtual_leir/LEIRBEAM/injectionBump_CTRS10_V_1mrad",
-                              "type": "function", "time": [200, 650]},
+                              "type": "functionSquare", "time": [200, 650], "delta": 100., "range": [100,1950]},
                            "LEIRBEAM/coolerBump_CTRS20_H_1mm":
                              {"name": "rmi://virtual_leir/LEIRBEAM/coolerBump_CTRS20_H_1mm",
-                              "type": "functionSquare", "time": [200, 650]},
+                              "type": "functionSquare", "time": [200, 650], "delta": 100., "range": [100,1950]},
                             "LEIRBEAM/coolerBump_CTRS20_H_1mrad":
                              {"name": "rmi://virtual_leir/LEIRBEAM/coolerBump_CTRS20_H_1mrad",
-                              "type": "function", "time": [200, 650]},
+                              "type": "functionSquare", "time": [200, 650], "delta": 100., "range": [100,1950]},
                             "LEIRBEAM/coolerBump_CTRS20_V_1mm":
                              {"name": "rmi://virtual_leir/LEIRBEAM/coolerBump_CTRS20_V_1mm",
-                              "type": "function", "time": [200, 650]},
+                              "type": "functionSquare", "time": [200, 650], "delta": 100., "range": [100,1950]},
                              "LEIRBEAM/coolerBump_CTRS20_V_1mrad":
                              {"name": "rmi://virtual_leir/LEIRBEAM/coolerBump_CTRS20_V_1mrad",
-                              "type": "function", "time": [200, 650]}
+                              "type": "functionSquare", "time": [200, 650], "delta": 100., "range": [100,1950]}
                              }
     markedItems = {"EI.BVN10/K", "EI.BVN20/K", "EI.BHN10/K"}
 
@@ -100,6 +101,11 @@ class ListSelector():
 
     def __init__(self):
         self.selectionList = []
-
+        
     def setSelection(self, selectedItems):
         self.selectionList = selectedItems
+    
+    def setItemTime(self, key, values):
+        self.parameterList[key]["time"] = values
+        
+        

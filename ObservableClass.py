@@ -17,11 +17,28 @@ class ObservableClass():
         self.dataOut = False
         self.dataWait = True
         self.dataLength = length
+        self.method = 'Maximum'
+        self.timeInterval = np.array([0, 0])
 
-    def setValue(self, x):
-        normVal = self.japc.getParam("EI.BCT10/Acquisition#chargesLinacSingle")
-        if normVal > 2:
-            self.valueList.append(x/normVal)
+    def setValue(self, inArray):
+        inArray = np.array(inArray[395:])*(-1)
+        print('inArray')
+        print(inArray)
+        if self.method == 'Maximum':
+            x = np.max(inArray)
+        elif self.method == 'Area':
+#            x = np.mean(inArray[self.timeInterval[0]:self.timeInterval[1]])
+             print("Value xtime")
+             print(self.timeInterval)
+             x = np.mean(inArray[self.timeInterval[0]:self.timeInterval[1]])
+             print("Value x")
+             print(x)
+        elif self.method == 'Transmission':
+            x = (inArray[self.timeInterval[1]]/inArray[self.timeInterval[0]])
+#        normVal = self.japc.getParam("EI.BCT10/Acquisition#chargesLinacSingle")
+#        if normVal > 2:
+#            self.valueList.append(x/normVal)
+        self.valueList.append(x)
         if len(self.valueList) >= self.dataLength:
             cleanData = self.valueList
             if len(cleanData) > 2:
