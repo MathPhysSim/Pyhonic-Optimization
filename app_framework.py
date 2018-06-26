@@ -18,11 +18,12 @@ from sceleton import Ui_MainWindow
 class MyApp(QMainWindow, Ui_MainWindow):
 
     japc = pyjapc.PyJapc(incaAcceleratorName="LEIR", noSet=False)
-    japc.setSelector("LEI.USER.EARLY")
+    
 #    japc.rbacLogin()
     averageNrValue = 5.
     parameterClass = pc.ParameterClass(japc)
     algorithmSelection = 'Powell'
+    observableMethodSelection = 'Maximum'
 
     def __init__(self):
         super(self.__class__, self).__init__()
@@ -44,7 +45,16 @@ class MyApp(QMainWindow, Ui_MainWindow):
                 self.spinBoxFTolValueChanged)
         self.spinBoxAverageNr.valueChanged.connect(
                 self.spinBoxAverageNrChanged)
+        self.doubleSpinBoxStartTime.valueChanged.connect(
+                self.doubleSpinBoxStartTimeChanged)
+        self.doubleSpinBoxEndTime.valueChanged.connect(
+                self.doubleSpinBoxEndTimeChanged)
 
+        self.doubleSpinBoxObservableStartTime.valueChanged.connect(
+                self.doubleSpinBoxObservableStartTimeChanged)
+        self.doubleSpinBoxObservableEndTime.valueChanged.connect(
+                self.doubleSpinBoxObservableEndTimeChanged)
+        
         self.japc.subscribeParam("ER.BCTDC/Acquisition#intensities",
                                  self.onValueRecieved)
 
@@ -55,13 +65,21 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.xTol = 0.02
         self.fTol = 0.05
         self.x0 = []
+        self.selectedElement = []
+        self.observableTime = np.array([0,0])
 
         self.spinBoxXTolValue.setValue(self.xTol)
         self.spinBoxFTolValue.setValue(self.fTol)
         self.spinBoxAverageNr.setValue(self.averageNrValue)
+        
         self.buttonGroup.buttonClicked.connect(self.buttonGroupSelected)
         self.algorithmSelection = self.buttonGroup.checkedButton().text()
 
+        self.buttonGroupObservable.\
+        buttonClicked.connect(self.buttonGroupObservableSelected)
+        self.observableMethodSelection = self.buttonGroupObservable.\
+        checkedButton().text()
+        
         self.listSelector = lsclass.ListSelector()
 
         for itemName in self.listSelector.getItems():
@@ -73,7 +91,18 @@ class MyApp(QMainWindow, Ui_MainWindow):
             self.listWidget.addItem(item)
         self.listWidget.sortItems()   
         self.listWidget.itemSelectionChanged.connect(self.itemsChanged)
+        self.listWidget.itemClicked.connect(self.itemSelected)
+        for itemName in ["LEI.USER.EARLY", "LEI.USER.NOMINAL",
+                         "LEI.USER.MDOPTIC"]:
+            item = QListWidgetItem(itemName)
+            self.listWidgetCycle.addItem(item)
+        self.listWidgetCycle.itemClicked.connect(self.itemsClickedCycle)
+        self.japc.setSelector("LEI.USER.EARLY")
 
+    def itemsClickedCycle(self, id):
+        print("Click")
+        print(id.text())
+        self.japc.setSelector(id.text())
     def itemsChanged(self):  # s is a str
 
         currentSelection = [item.text() for item in
@@ -85,9 +114,69 @@ class MyApp(QMainWindow, Ui_MainWindow):
         else:
             self.runOptimizationButton.setEnabled(False)
 
+    def itemSelected(self, id):
+        self.selectedElement = id.text()
+        selectedEntry = self.listSelector.parameterList[self.selectedElement]
+        if (selectedEntry['type'] == 'functionSquare')|(self.selectedElement=="ETL.GSBHN10/KICK"):
+            self.doubleSpinBoxStartTime.setEnabled(True)
+            self.doubleSpinBoxEndTime.setEnabled(True)
+
+            self.doubleSpinBoxStartTime.setValue(
+                    float(selectedEntry['time'][0]))
+            self.doubleSpinBoxEndTime.setValue(
+                    float(selectedEntry['time'][1]))
+
+        else:
+            self.doubleSpinBoxStartTime.setEnabled(False)
+            self.doubleSpinBoxEndTime.setEnabled(False)
+
+    def doubleSpinBoxStartTimeChanged(self):
+        selectedEntry = self.listSelector.parameterList[self.selectedElement]
+#        print(selectedEntry['time'][1])
+        self.listSelector.setItemTime(self.selectedElement,
+                                      [self.doubleSpinBoxStartTime.value(),
+                                       selectedEntry['time'][1]])
+#        self.doubleSpinBoxEndTime.setMinimum(
+#                self.doubleSpinBoxStartTime.value()+25.)
+
+    def doubleSpinBoxEndTimeChanged(self):
+        selectedEntry = self.listSelector.parameterList[self.selectedElement]
+#        print(selectedEntry['time'][1])
+        self.listSelector.setItemTime(self.selectedElement,
+                                      [selectedEntry['time'][0],
+                                       self.doubleSpinBoxEndTime.value()])
+
+    def doubleSpinBoxObservableStartTimeChanged(self):
+#        print("touchme1")
+        
+        self.ob.timeInterval[0] = self.doubleSpinBoxObservableStartTime.value()
+#        print(self.ob.timeInterval)
+        self.doubleSpinBoxObservableEndTime.\
+        setMinimum(self.ob.timeInterval[0]+1)
+
+    def doubleSpinBoxObservableEndTimeChanged(self):
+#        print("touchme2")
+        
+        self.ob.timeInterval[1] = self.doubleSpinBoxObservableEndTime.value()
+#        print(self.ob.timeInterval)
+#        self.doubleSpinBoxObservableStartTime.\
+#        setMaximum(self.ob.timeInterval[1])
+
     def buttonGroupSelected(self, id):
         self.algorithmSelection = id.text()
 
+    def buttonGroupObservableSelected(self, id):
+        self.observableMethodSelection = id.text()
+        if (self.observableMethodSelection == 'Area') |\
+           (self.observableMethodSelection == 'Transmission'):
+            self.doubleSpinBoxObservableEndTime.\
+            setMinimum(self.ob.timeInterval[0]+1)
+            self.doubleSpinBoxObservableStartTime.setEnabled(True)
+            self.doubleSpinBoxObservableEndTime.setEnabled(True)
+        else:
+            self.doubleSpinBoxObservableStartTime.setEnabled(False)
+            self.doubleSpinBoxObservableEndTime.setEnabled(False)
+        self.ob.method = id.text()
 
     def buttonRestoreOldValuesPressed(self):
         self.setValues(self.x0)
@@ -103,23 +192,26 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.ob.dataLength = self.averageNrValue
 
     def onValueRecieved(self, parameterName, newValue):
-        self.ob.setValue(np.abs(np.mean(newValue[395:395+300])) * (-1.))  # /normVal
+        self.ob.setValue(newValue)  # /normVal
 #        print('subscibtionRuns')
 
     def runOptimization(self):
         if self.runOptimizationButton.text() == "Start":
-
+            self.listWidgetCycle.setEnabled(False)
+#            print("pass0")
             self.parameterClass.resetParameters()
-
+#            print("pass1")
+#            print(self.listSelector.getSelectedItemsDict())
+#            print("pass1x")
             self.parameterClass.addParameters(
                     self.listSelector.getSelectedItemsDict())
-
+#            print("pass2")
             self.x0 = self.parameterClass.getStartVector()
-
+#            print("pass3")
             self.getOptimalValueThread = gOVThread.getOptimalMultiValueThread(
                     self.parameterClass, self.ob, self.algorithmSelection,
                     self.xTol, self.fTol)
-
+#            print("pass4")
             self.getOptimalValueThread.signals.setSubscribtion.connect(
                     self.setSubscribtion)
             self.getOptimalValueThread.signals.setValues.connect(
@@ -136,15 +228,15 @@ class MyApp(QMainWindow, Ui_MainWindow):
             self.getOptimalValueThread.wait()
             self.getOptimalValueThread.quit()
             self.getOptimalValueThread.wait()
-
+            self.listWidgetCycle.setEnabled(False)
             self.runOptimizationButton.setText('Start')
 
     def setValues(self, x):
-        print(x)
+#        print(x)
         self.parameterClass.setNewValues(x)
 
     def done(self):
-        print("DONE")
+#        print("DONE")
         self.runOptimizationButton.setText('Start')
         QMessageBox.information(self, 'Scan succsessful', "Final values at: " +
                                 str(self.parameterClass.getValues()) +
@@ -172,7 +264,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.plotWidget.canvas.axs[0].set_xlabel('Nr of changes')
         self.plotWidget.canvas.axs[1].set_xlabel('Nr of changes')
         self.plotWidget.canvas.axs[0].set_ylabel('parameters (a.u.)')
-        self.plotWidget.canvas.axs[1].set_ylabel('ER-EI efficiency')
+        self.plotWidget.canvas.axs[1].set_ylabel(self.observableMethodSelection)
 
         self.plotWidget.canvas.fig.tight_layout()
         self.plotWidget.canvas.draw()

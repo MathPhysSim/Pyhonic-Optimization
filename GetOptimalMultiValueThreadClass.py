@@ -38,6 +38,7 @@ class getOptimalMultiValueThread(QThread):
         self.signals = CommuticatorSingals()
         self.nrCalls = 0
         self.startValues = np.array(self.parameterClass.getStartVector())
+       
         self.updateData(self.startValues, np.nan)
 
         self.xTol = xTol
@@ -45,9 +46,10 @@ class getOptimalMultiValueThread(QThread):
         self.algorithmSelection = algorithmSelection
 
     def updateData(self, x, intensityValue):
+        print(x)
         self.parameterEvolution[self.nrCalls] = np.nan
         self.parameterEvolution.iloc[:-1,
-                                     self.nrCalls] = x
+                                     self.nrCalls] = np.array(x).flatten()
         self.parameterEvolution.iloc[-1,
                                      self.nrCalls] = intensityValue
         print(self.parameterEvolution)
@@ -56,11 +58,10 @@ class getOptimalMultiValueThread(QThread):
         self.wait()
 
     def run(self):
-        print(self.xTol)
-        print(self.fTol)
+
         self.signals.setSubscribtion.emit(True)
         x0 = self.startValues
-        print(self.parameterClass.getStartDirection())
+#        print(self.parameterClass.getStartDirection())
         if self.algorithmSelection == 'Powell':
             res = optimize.fmin_powell(self._func_obj, x0, xtol=self.xTol,
                                        ftol=self.fTol,
