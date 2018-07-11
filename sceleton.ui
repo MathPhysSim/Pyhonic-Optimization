@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>761</width>
-    <height>747</height>
+    <height>781</height>
    </rect>
   </property>
   <property name="palette">
@@ -429,7 +429,7 @@
    </palette>
   </property>
   <property name="windowTitle">
-   <string>Injection Optimizer V 0.0.2</string>
+   <string>Injection Optimizer V 0.1.0</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -775,7 +775,7 @@
          <number>4</number>
         </property>
         <property name="text">
-         <string>Don't worry be happy!</string>
+         <string>Don't worry be happy! Questions: simon.hirlaender@cern.ch</string>
         </property>
         <property name="textFormat">
          <enum>Qt::RichText</enum>

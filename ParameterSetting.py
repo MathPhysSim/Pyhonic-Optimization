@@ -29,7 +29,7 @@ class ParameterClass():
         return startVector
 
     def getStartDirection(self):
-        return np.diag([5e-1 for ii in range(len(self.memberParameters))])
+        return np.diag([.75e-3 for ii in range(len(self.memberParameters))])
 
     def setNewValues(self, x):
         x = np.array(x)

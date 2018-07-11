@@ -9,18 +9,18 @@ Created on Tue Jun  5 21:30:16 2018
 class ListSelector():
 
     parameterList = {
-#                    "EI.BVN10/K":
-#                     {"name": "rmi://virtual_sps/logical.EI.BVN10/K",
-#                      "type": "scalar"},
-#                     "EI.BVN20/K":
-#                         {"name": "rmi://virtual_sps/logical.EI.BVN20/K",
-#                          "type": "scalar"},
-#                     "EI.BHN10/K":
-#                         {"name": "rmi://virtual_sps/logical.EI.BHN10/K",
-#                          "type": "scalar"},
-#                     "ETL.BHN20-INJ/K":
-#                         {"name": "rmi://virtual_sps/logical.ETL.BHN20-INJ/K",
-#                          "type": "scalar"},
+                    "EI.BVN10/K":
+                     {"name": "rmi://virtual_sps/logical.EI.BVN10/K",
+                      "type": "scalar"},
+                     "EI.BVN20/K":
+                         {"name": "rmi://virtual_sps/logical.EI.BVN20/K",
+                          "type": "scalar"},
+                     "EI.BHN10/K":
+                         {"name": "rmi://virtual_sps/logical.EI.BHN10/K",
+                          "type": "scalar"},
+                     "ETL.BHN20-INJ/K":
+                         {"name": "rmi://virtual_sps/logical.ETL.BHN20-INJ/K",
+                          "type": "scalar"},
 #                         "ITH.DHZ10/K":
 #                             {"name": "rmi://virtual_sps/logical.ITH.DHZ10/K",
 #                              "type": "scalar"},
@@ -70,7 +70,7 @@ class ListSelector():
                              {"name": "rmi://virtual_leir/LEIRBEAM/injectionBump_CTRS10_H_1mrad",
                               "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950]},
                           "LEIRBEAM/injectionBump_CTRS10_V_1mm":
-                             {"name": "rmi://virtual_leir/LEIRBEAM/injectionBump_CTRS10_H_1mrad",
+                             {"name": "rmi://virtual_leir/LEIRBEAM/injectionBump_CTRS10_V_1mm",
                               "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950]},
                            "LEIRBEAM/injectionBump_CTRS10_V_1mrad":
                              {"name": "rmi://virtual_leir/LEIRBEAM/injectionBump_CTRS10_V_1mrad",
@@ -86,7 +86,22 @@ class ListSelector():
                               "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950]},
                              "LEIRBEAM/coolerBump_CTRS20_V_1mrad":
                              {"name": "rmi://virtual_leir/LEIRBEAM/coolerBump_CTRS20_V_1mrad",
-                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950]}
+                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950]},
+                             "LEIRBEAM/extractionRegionSteering_CTRS40_H_1mm":
+                             {"name": "rmi://virtual_leir/LEIRBEAM/extractionRegionSteering_CTRS40_H_1mm",
+                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950]},
+                             "LEIRBEAM/extractionRegionSteering_CTRS40_H_1mrad":
+                             {"name": "rmi://virtual_leir/LEIRBEAM/extractionRegionSteering_CTRS40_H_1mrad",
+                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950]},
+                             "LEIRBEAM/extractionRegionSteering_CTRS40_V_1mm":
+                             {"name": "rmi://virtual_leir/LEIRBEAM/extractionRegionSteering_CTRS40_V_1mm",
+                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950]},
+                             "LEIRBEAM/extractionRegionSteering_CTRS40_V_1mrad":
+                             {"name": "rmi://virtual_leir/LEIRBEAM/extractionRegionSteering_CTRS40_V_1mrad",
+                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950]}#,
+#                              "EA.FGFREVCOR/Settings#amplitudes":
+#                             {"name": "rmi://inca_leir/EA.FGFREVCOR/Settings#amplitudes",
+#                             "type": "function", "time": [0, 60]}
                              }
     markedItems = {"EI.BVN10/K", "EI.BVN20/K", "EI.BHN10/K"}
 

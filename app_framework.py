@@ -54,7 +54,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
                 self.doubleSpinBoxObservableStartTimeChanged)
         self.doubleSpinBoxObservableEndTime.valueChanged.connect(
                 self.doubleSpinBoxObservableEndTimeChanged)
-        
+        self.japc.setSelector("LEI.USER.EARLY")
         self.japc.subscribeParam("ER.BCTDC/Acquisition#intensities",
                                  self.onValueRecieved)
 
@@ -62,8 +62,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
 
 #        self.visualizeData()
-        self.xTol = 0.02
-        self.fTol = 0.05
+        self.xTol = 0.01
+        self.fTol = 0.01
         self.x0 = []
         self.selectedElement = []
         self.observableTime = np.array([0,0])
@@ -93,16 +93,25 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.listWidget.itemSelectionChanged.connect(self.itemsChanged)
         self.listWidget.itemClicked.connect(self.itemSelected)
         for itemName in ["LEI.USER.EARLY", "LEI.USER.NOMINAL",
-                         "LEI.USER.MDOPTIC"]:
+                         "LEI.USER.MDOPTIC", "LEI.USER.AMDRF",
+                         "LEI.USER.MDEARLY"]:
             item = QListWidgetItem(itemName)
             self.listWidgetCycle.addItem(item)
         self.listWidgetCycle.itemClicked.connect(self.itemsClickedCycle)
-        self.japc.setSelector("LEI.USER.EARLY")
+        
 
     def itemsClickedCycle(self, id):
         print("Click")
-        print(id.text())
+#        print(id.text())
+        
+#        self.japc.clearSubscribtions()
+        print("Click1")
         self.japc.setSelector(id.text())
+        print("Click1")
+        self.japc.subscribeParam("ER.BCTDC/Acquisition#intensities",
+                                 self.onValueRecieved)
+        print(self.japc.getSelector())
+        print("Click")
     def itemsChanged(self):  # s is a str
 
         currentSelection = [item.text() for item in
@@ -117,7 +126,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
     def itemSelected(self, id):
         self.selectedElement = id.text()
         selectedEntry = self.listSelector.parameterList[self.selectedElement]
-        if (selectedEntry['type'] == 'functionSquare')|(self.selectedElement=="ETL.GSBHN10/KICK"):
+        if (selectedEntry['type'] == 'functionSquare')|(self.selectedElement=="ETL.GSBHN10/KICK")|(self.selectedElement=="EA.FGFREVCOR/Settings#amplitudes"):
             self.doubleSpinBoxStartTime.setEnabled(True)
             self.doubleSpinBoxEndTime.setEnabled(True)
 
@@ -228,7 +237,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
             self.getOptimalValueThread.wait()
             self.getOptimalValueThread.quit()
             self.getOptimalValueThread.wait()
-            self.listWidgetCycle.setEnabled(False)
+            self.listWidgetCycle.setEnabled(True)
             self.runOptimizationButton.setText('Start')
 
     def setValues(self, x):

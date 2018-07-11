@@ -12,7 +12,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setEnabled(True)
-        MainWindow.resize(761, 747)
+        MainWindow.resize(761, 781)
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -340,7 +340,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Injection Optimizer V 0.0.2"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Injection Optimizer V 0.1.0"))
         self.label_12.setText(_translate("MainWindow", "Cycle selection"))
         self.label_11.setText(_translate("MainWindow", "Optimization method"))
         self.radioButtonPowell.setText(_translate("MainWindow", "Powell"))
@@ -359,7 +359,7 @@ class Ui_MainWindow(object):
         self.label_7.setText(_translate("MainWindow", "End Time"))
         self.runOptimizationButton.setText(_translate("MainWindow", "Start"))
         self.buttonRestoreOldValues.setText(_translate("MainWindow", "Restore old values"))
-        self.label_3.setText(_translate("MainWindow", "Don\'t worry be happy!"))
+        self.label_3.setText(_translate("MainWindow", "Don\'t worry be happy! Questions: simon.hirlaender@cern.ch"))
         self.imageLabel.setText(_translate("MainWindow", "TextLabel"))
 
 from mplwidget import MplWidget
