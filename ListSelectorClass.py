@@ -11,16 +11,16 @@ class ListSelector():
     parameterList = {
                     "EI.BVN10/K":
                      {"name": "rmi://virtual_sps/logical.EI.BVN10/K",
-                      "type": "scalar"},
+                      "type": "scalar", 'startDirection': 1e-3},
                      "EI.BVN20/K":
                          {"name": "rmi://virtual_sps/logical.EI.BVN20/K",
-                          "type": "scalar"},
+                          "type": "scalar", 'startDirection': 1e-3},
                      "EI.BHN10/K":
                          {"name": "rmi://virtual_sps/logical.EI.BHN10/K",
-                          "type": "scalar"},
+                          "type": "scalar", 'startDirection': 1e-3},
                      "ETL.BHN20-INJ/K":
                          {"name": "rmi://virtual_sps/logical.ETL.BHN20-INJ/K",
-                          "type": "scalar"},
+                          "type": "scalar", 'startDirection': 1e-3},
 #                         "ITH.DHZ10/K":
 #                             {"name": "rmi://virtual_sps/logical.ITH.DHZ10/K",
 #                              "type": "scalar"},
@@ -62,43 +62,63 @@ class ListSelector():
 #                          "type": "scalar"},
                          "ETL.GSBHN10/KICK":
                              {"name": "rmi://virtual_leir/ETL.GSBHN10/KICK",
-                             "type": "function", "time": [110, 660]},
+                             "type": "function", "time": [110, 660], 'startDirection': 1e-3},
                           "LEIRBEAM/injectionBump_CTRS10_H_1mm":
                              {"name": "rmi://virtual_leir/LEIRBEAM/injectionBump_CTRS10_H_1mm",
-                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950]},
+                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
+                              'startDirection': 1e-3},
                           "LEIRBEAM/injectionBump_CTRS10_H_1mrad":
                              {"name": "rmi://virtual_leir/LEIRBEAM/injectionBump_CTRS10_H_1mrad",
-                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950]},
+                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
+                              'startDirection': 1e-3},
                           "LEIRBEAM/injectionBump_CTRS10_V_1mm":
                              {"name": "rmi://virtual_leir/LEIRBEAM/injectionBump_CTRS10_V_1mm",
-                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950]},
+                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
+                              'startDirection': 1e-3},
                            "LEIRBEAM/injectionBump_CTRS10_V_1mrad":
                              {"name": "rmi://virtual_leir/LEIRBEAM/injectionBump_CTRS10_V_1mrad",
-                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950]},
+                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
+                              'startDirection': 1e-3},
                            "LEIRBEAM/coolerBump_CTRS20_H_1mm":
                              {"name": "rmi://virtual_leir/LEIRBEAM/coolerBump_CTRS20_H_1mm",
-                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950]},
+                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
+                              'startDirection': 1e-3},
                             "LEIRBEAM/coolerBump_CTRS20_H_1mrad":
                              {"name": "rmi://virtual_leir/LEIRBEAM/coolerBump_CTRS20_H_1mrad",
-                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950]},
+                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
+                              'startDirection': 1e-3},
                             "LEIRBEAM/coolerBump_CTRS20_V_1mm":
                              {"name": "rmi://virtual_leir/LEIRBEAM/coolerBump_CTRS20_V_1mm",
-                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950]},
+                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
+                              'startDirection': 1e-3},
                              "LEIRBEAM/coolerBump_CTRS20_V_1mrad":
                              {"name": "rmi://virtual_leir/LEIRBEAM/coolerBump_CTRS20_V_1mrad",
-                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950]},
+                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
+                              'startDirection': 1e-3},
                              "LEIRBEAM/extractionRegionSteering_CTRS40_H_1mm":
                              {"name": "rmi://virtual_leir/LEIRBEAM/extractionRegionSteering_CTRS40_H_1mm",
-                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950]},
+                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
+                              'startDirection': 1e-3},
                              "LEIRBEAM/extractionRegionSteering_CTRS40_H_1mrad":
                              {"name": "rmi://virtual_leir/LEIRBEAM/extractionRegionSteering_CTRS40_H_1mrad",
-                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950]},
+                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
+                              'startDirection': 1e-3},
                              "LEIRBEAM/extractionRegionSteering_CTRS40_V_1mm":
                              {"name": "rmi://virtual_leir/LEIRBEAM/extractionRegionSteering_CTRS40_V_1mm",
-                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950]},
+                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
+                              'startDirection': 1e-3},
                              "LEIRBEAM/extractionRegionSteering_CTRS40_V_1mrad":
                              {"name": "rmi://virtual_leir/LEIRBEAM/extractionRegionSteering_CTRS40_V_1mrad",
-                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950]}#,
+                              "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
+                              'startDirection': 1e-3},
+                              "ER.GSECVGUN/Setting#amplitudesPoint1":
+                             {"name": "rmi://virtual_leir/ER.GSECVGUN/Setting#amplitudes",
+                             "type": "functionList", "time": [200, 900],
+                              'startDirection': 1e-3},
+                             "ER.GSECVGUN/Setting#amplitudesPoint2":
+                             {"name": "rmi://virtual_leir/ER.GSECVGUN/Setting#amplitudes",
+                             "type": "functionList", "time": [2170, 2180],
+                              'startDirection': 1e-3},
 #                              "EA.FGFREVCOR/Settings#amplitudes":
 #                             {"name": "rmi://inca_leir/EA.FGFREVCOR/Settings#amplitudes",
 #                             "type": "function", "time": [0, 60]}
@@ -122,5 +142,8 @@ class ListSelector():
     
     def setItemTime(self, key, values):
         self.parameterList[key]["time"] = values
+                          
+    def setItemStartDirection(self, key, value):
+        self.parameterList[key]["startDirection"] = value                      
         
         

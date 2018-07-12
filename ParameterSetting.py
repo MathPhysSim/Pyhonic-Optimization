@@ -29,7 +29,13 @@ class ParameterClass():
         return startVector
 
     def getStartDirection(self):
-        return np.diag([.75e-3 for ii in range(len(self.memberParameters))])
+        startVec = []
+        for key in self.memberParameters:
+            startVec.append(self.memberParameters[key].parameterStartDirection)
+        print(10*'test')
+        print(np.diag(startVec))
+        print(10*'test')
+        return np.diag(startVec)
 
     def setNewValues(self, x):
         x = np.array(x)
@@ -57,6 +63,7 @@ class parameterObject():
         self.japc = japcIn
         self.parameterName = parameterNameDict['name']
         self.parameterType = parameterNameDict['type']
+        self.parameterStartDirection = parameterNameDict['startDirection']
 #        print("parameterObject")
         if self.parameterType == 'function':
             self.object = constFunctionClass(japcIn, self.parameterName,
@@ -68,6 +75,9 @@ class parameterObject():
                                               parameterNameDict['delta'],
                                               parameterNameDict['range'])
 #            print("parameterObject2")
+        elif self.parameterType == 'functionList':
+            self.object = constFunctionListClass(japcIn, self.parameterName,
+                                              parameterNameDict['time'])
         else:
             self.object = scalarClass(japcIn, self.parameterName)
 #        print("parameterObject3")    
@@ -80,7 +90,48 @@ class parameterObject():
     def setValue(self, x):
         self.object.setValue(x)
         return None
+    
+class constFunctionListClass():
+#    t1 = 200
+#    t2 = 1850
+    
+    def __init__(self, japcIn, elementName, t):
+        self.japc = japcIn
+        self.elementName = elementName
+#        print(self.elementName)
+        self.t = t
 
+    def getValue(self):
+        try:
+            app = self.japc.getParam(self.elementName,
+                                     noPyConversion=True).getValue()
+            print(app)
+            time = np.array(app.getDiscreteFunctionList().getFunctions()[0].xArray)
+            Qtrim = np.array(app.getDiscreteFunctionList().getFunctions()[0].yArray)
+            ind_select = np.where(
+                    (np.array(time) >= self.t[0]) & (np.array(time) <= self.t[1]))
+            print(Qtrim[ind_select][0])
+            return Qtrim[ind_select][0]
+
+
+        except Exception as e:
+#            print("pos x1")
+            print(e.stacktrace())    
+
+    
+    def setValue(self, setValue):
+        app = self.japc.getParam(self.elementName,
+                                 noPyConversion=True).getValue()
+        time = np.array(app.getDiscreteFunctionList().getFunctions()[0].xArray)
+        Qtrim = np.array(app.getDiscreteFunctionList().getFunctions()[0].yArray)
+        Qtrim[np.where((np.array(time) >= self.t[0]) &
+                       (np.array(time) <= self.t[1]))] = setValue
+        app.getDiscreteFunctionList().getFunctions()[0].yArray = Qtrim
+        try:
+            self.japc.setParam(self.elementName, app,
+                               dimcheck=True)
+        except Exception as e:
+            print(e.stacktrace())
 
 class constFunctionClass():
 #    t1 = 200

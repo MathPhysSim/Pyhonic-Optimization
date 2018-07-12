@@ -49,7 +49,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
                 self.doubleSpinBoxStartTimeChanged)
         self.doubleSpinBoxEndTime.valueChanged.connect(
                 self.doubleSpinBoxEndTimeChanged)
-
+        self.doubleSpinBoxStartDirection.valueChanged.connect(
+                self.doubleSpinBoxStartDirectionChanged)
+        
         self.doubleSpinBoxObservableStartTime.valueChanged.connect(
                 self.doubleSpinBoxObservableStartTimeChanged)
         self.doubleSpinBoxObservableEndTime.valueChanged.connect(
@@ -126,7 +128,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
     def itemSelected(self, id):
         self.selectedElement = id.text()
         selectedEntry = self.listSelector.parameterList[self.selectedElement]
-        if (selectedEntry['type'] == 'functionSquare')|(self.selectedElement=="ETL.GSBHN10/KICK")|(self.selectedElement=="EA.FGFREVCOR/Settings#amplitudes"):
+        self.doubleSpinBoxStartDirection.setValue(
+                    float(selectedEntry['startDirection']))   
+        if (selectedEntry['type'] == 'functionSquare')|(self.selectedElement=="ETL.GSBHN10/KICK")|(selectedEntry['type'] == 'functionList'):
             self.doubleSpinBoxStartTime.setEnabled(True)
             self.doubleSpinBoxEndTime.setEnabled(True)
 
@@ -138,6 +142,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
         else:
             self.doubleSpinBoxStartTime.setEnabled(False)
             self.doubleSpinBoxEndTime.setEnabled(False)
+            
+  
 
     def doubleSpinBoxStartTimeChanged(self):
         selectedEntry = self.listSelector.parameterList[self.selectedElement]
@@ -154,6 +160,12 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.listSelector.setItemTime(self.selectedElement,
                                       [selectedEntry['time'][0],
                                        self.doubleSpinBoxEndTime.value()])
+
+    def doubleSpinBoxStartDirectionChanged(self):
+        selectedEntry = self.listSelector.parameterList[self.selectedElement]
+#        print(selectedEntry['time'][1])
+        self.listSelector.setItemStartDirection(self.selectedElement,
+                                       self.doubleSpinBoxStartDirection.value())
 
     def doubleSpinBoxObservableStartTimeChanged(self):
 #        print("touchme1")
