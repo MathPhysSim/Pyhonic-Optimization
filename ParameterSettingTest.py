@@ -19,7 +19,7 @@ parameterClass = pc.ParameterClass(japc)
 
 
 ls = lsclass.ListSelector()
-ls.setSelection(["ETL.GSBHN10/KICK"])
+ls.setSelection(["Linac3 RC StartPhase"])
 # japc.rbacLogin(loginDialog=True)
 parameterClass.addParameters(ls.getSelectedItemsDict())
 print("Current Value")

@@ -8,7 +8,27 @@ Created on Tue Jun  5 21:30:16 2018
 
 class ListSelector():
 
-    parameterList = {
+    parameterList = {"Linac3 RC EndPhase":
+                    {"name": "LRFSC.ramping/SetPointsSimple#spEndPhase",
+                      "type": "scalarNonLSA", 'startDirection': 1e-3},
+                     "Linac3 RC StartPhase":
+                    {"name": "LRFSC.ramping/SetPointsSimple#spStartPhase",
+                      "type": "scalarNonLSA", 'startDirection': 1e-3},
+                      "Linac3 DB EndPhase":
+                    {"name": "LRFSC.debunch/SetPointsSimple#spEndPhase",
+                      "type": "scalarNonLSA", 'startDirection': 1e-3}, 
+                      "Linac3 DB StartPhase":
+                    {"name": "LRFSC.debunch/SetPointsSimple#spStartPhase",
+                      "type": "scalarNonLSA", 'startDirection': 1e-3}, 
+                     
+                      "Linac3 Tank3 amp":
+                    {"name": "IA3.RF/SettiPPMProperty#ref_amplit",
+                      "type": "scalarNonLSA", 'startDirection': 1e-3}, 
+
+                      "Linac3 Tank3 phase":
+                    {"name": "IA3.RF/SettiPPMProperty#ref_phase",
+                      "type": "scalarNonLSA", 'startDirection': 1e-3}, 
+                      
                     "EI.BVN10/K":
                      {"name": "rmi://virtual_sps/logical.EI.BVN10/K",
                       "type": "scalar", 'startDirection': 1e-3},

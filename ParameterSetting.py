@@ -78,6 +78,8 @@ class parameterObject():
         elif self.parameterType == 'functionList':
             self.object = constFunctionListClass(japcIn, self.parameterName,
                                               parameterNameDict['time'])
+        elif self.parameterType == 'scalarNonLSA':
+            self.object = scalarClassNonLsa(japcIn, self.parameterName)    
         else:
             self.object = scalarClass(japcIn, self.parameterName)
 #        print("parameterObject3")    
@@ -197,6 +199,25 @@ class scalarClass():
         self.japc.setParam(self.parameterName, knobParam)
         return None
 
+
+class scalarClassNonLsa():
+
+    def __init__(self, japcIn, parameterName):
+
+        self.japc = japcIn
+        self.parameterName = parameterName
+
+    def getValue(self):
+        knobParam = self.japc.getParam(self.parameterName,
+                                       timingSelectorOverride=
+                                       self.japc.getSelector())
+        return knobParam
+
+    def setValue(self, x):
+        self.japc.setParam(self.parameterName, x)
+        return None
+    
+    
 class squareFunctionClass():
 #    t1 = 200
 #    t2 = 1850
