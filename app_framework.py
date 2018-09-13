@@ -96,7 +96,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.listWidget.itemClicked.connect(self.itemSelected)
         for itemName in ["LEI.USER.EARLY", "LEI.USER.NOMINAL",
                          "LEI.USER.MDOPTIC", "LEI.USER.AMDRF",
-                         "LEI.USER.MDEARLY"]:
+                         "LEI.USER.MDEARLY", "LEI.USER.AMDOPTIC",
+                         "LEI.USER.MDNOM", "LEI.USER.AMDNOM",
+                          "LEI.USER.ANOMINAL","LEI.USER.MDRF"]]:
             item = QListWidgetItem(itemName)
             self.listWidgetCycle.addItem(item)
         self.listWidgetCycle.itemClicked.connect(self.itemsClickedCycle)

@@ -12,7 +12,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setEnabled(True)
-        MainWindow.resize(923, 834)
+        MainWindow.resize(1303, 834)
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -209,7 +209,7 @@ class Ui_MainWindow(object):
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.label_2)
         self.spinBoxFTolValue = QtWidgets.QDoubleSpinBox(self.centralwidget)
         self.spinBoxFTolValue.setMinimumSize(QtCore.QSize(0, 20))
-        self.spinBoxFTolValue.setDecimals(2)
+        self.spinBoxFTolValue.setDecimals(4)
         self.spinBoxFTolValue.setMinimum(0.0)
         self.spinBoxFTolValue.setMaximum(1.0)
         self.spinBoxFTolValue.setSingleStep(0.01)
@@ -338,7 +338,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addLayout(self.verticalLayout_2)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 923, 23))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1303, 23))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -350,7 +350,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Injection Optimizer V 0.1.0"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Injection Optimizer V 0.3.0"))
         self.label_12.setText(_translate("MainWindow", "Cycle selection"))
         self.label_11.setText(_translate("MainWindow", "Optimization method"))
         self.radioButtonPowell.setText(_translate("MainWindow", "Powell"))

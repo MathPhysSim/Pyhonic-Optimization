@@ -8,7 +8,14 @@ Created on Tue Jun  5 21:30:16 2018
 
 class ListSelector():
 
-    parameterList = {"Linac3 RC EndPhase":
+    parameterList = { "Linac3 Tank2 amp":
+                    {"name": "IA2.RF/SettiPPMProperty#ref_amplit",
+                      "type": "scalarNonLSA", 'startDirection': 1e-3}, 
+
+                      "Linac3 Tank2 phase":
+                    {"name": "IA2.RF/SettiPPMProperty#ref_phase",
+                      "type": "scalarNonLSA", 'startDirection': 1e-3}, 
+                     "Linac3 RC EndPhase":
                     {"name": "LRFSC.ramping/SetPointsSimple#spEndPhase",
                       "type": "scalarNonLSA", 'startDirection': 1e-3},
                      "Linac3 RC StartPhase":
@@ -28,7 +35,20 @@ class ListSelector():
                       "Linac3 Tank3 phase":
                     {"name": "IA3.RF/SettiPPMProperty#ref_phase",
                       "type": "scalarNonLSA", 'startDirection': 1e-3}, 
-                      
+                    "Linac3 RC StartAmplitude":
+                    {"name": "LRFSC.ramping/SetPointsSimple#spStartAmplitude",
+                      "type": "scalarNonLSA", 'startDirection': 1e-3}, 
+                     "Linac3 RC EndAmplitude":
+                    {"name": "LRFSC.ramping/SetPointsSimple#spEndAmplitude",
+                      "type": "scalarNonLSA", 'startDirection': 1e-3}, 
+
+                    "Linac3 DB StartAmplitude":
+                    {"name": "LRFSC.debunch/SetPointsSimple#spStartAmplitude",
+                      "type": "scalarNonLSA", 'startDirection': 1e-3}, 
+                     "Linac3 DB EndAmplitude":
+                    {"name": "LRFSC.debunch/SetPointsSimple#spEndAmplitude",
+                      "type": "scalarNonLSA", 'startDirection': 1e-3},  
+                    
                     "EI.BVN10/K":
                      {"name": "rmi://virtual_sps/logical.EI.BVN10/K",
                       "type": "scalar", 'startDirection': 1e-3},

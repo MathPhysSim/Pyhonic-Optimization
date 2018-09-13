@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>923</width>
+    <width>1303</width>
     <height>834</height>
    </rect>
   </property>
@@ -429,7 +429,7 @@
    </palette>
   </property>
   <property name="windowTitle">
-   <string>Injection Optimizer V 0.1.0</string>
+   <string>Injection Optimizer V 0.3.0</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -549,7 +549,7 @@
              </size>
             </property>
             <property name="decimals">
-             <number>2</number>
+             <number>4</number>
             </property>
             <property name="minimum">
              <double>0.000000000000000</double>
@@ -836,7 +836,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>923</width>
+     <width>1303</width>
      <height>23</height>
     </rect>
    </property>
