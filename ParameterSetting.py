@@ -32,9 +32,9 @@ class ParameterClass():
         startVec = []
         for key in self.memberParameters:
             startVec.append(self.memberParameters[key].parameterStartDirection)
-        print(10*'test')
-        print(np.diag(startVec))
-        print(10*'test')
+#        print(10*'test')
+#        print(np.diag(startVec))
+#        print(10*'test')
         return np.diag(startVec)
 
     def setNewValues(self, x):
@@ -107,12 +107,12 @@ class constFunctionListClass():
         try:
             app = self.japc.getParam(self.elementName,
                                      noPyConversion=True).getValue()
-            print(app)
+#            print(app)
             time = np.array(app.getDiscreteFunctionList().getFunctions()[0].xArray)
             Qtrim = np.array(app.getDiscreteFunctionList().getFunctions()[0].yArray)
             ind_select = np.where(
                     (np.array(time) >= self.t[0]) & (np.array(time) <= self.t[1]))
-            print(Qtrim[ind_select][0])
+#            print(Qtrim[ind_select][0])
             return Qtrim[ind_select][0]
 
 
@@ -275,7 +275,7 @@ class squareFunctionClass():
     def getValue(self):
 #        print("getValue1")
         if not(self.initiate):
-            print("getValue2")
+#            print("getValue2")
             self.initiateValues()
 #        print("getValue3")    
         try:

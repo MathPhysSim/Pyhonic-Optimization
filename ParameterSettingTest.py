@@ -14,7 +14,7 @@ import ListSelectorClass as lsclass
 
 
 japc = pyjapc.PyJapc(incaAcceleratorName="LEIR", noSet=False)
-japc.setSelector("LEI.USER.EARLY")
+japc.setSelector("ALL.USER.ALL)")
 parameterClass = pc.ParameterClass(japc)
 
 
