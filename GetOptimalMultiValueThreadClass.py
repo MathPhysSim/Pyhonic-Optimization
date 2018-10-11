@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 
 
-class CommuticatorSingals(QObject):
+class CommuticatorSignals(QObject):
 
     drawNow = pyqtSignal()
     jobFinished = pyqtSignal()
@@ -29,13 +29,13 @@ class getOptimalMultiValueThread(QThread):
 
         self.ob = observableParameter
         self.parameterClass = parameterClass
-        index = self.parameterClass.getNames()
-        index.append("intensity")
+        self.index = self.parameterClass.getNames()
+        self.index.append("intensity")
         self.parameterEvolution = pd.DataFrame(
-                index=index)
+                index=self.index)
 
         self.cancelFlag = False
-        self.signals = CommuticatorSingals()
+        self.signals = CommuticatorSignals()
         self.nrCalls = 0
         self.startValues = np.array(self.parameterClass.getStartVector())
        
@@ -44,6 +44,8 @@ class getOptimalMultiValueThread(QThread):
         self.xTol = xTol
         self.fTol = fTol
         self.algorithmSelection = algorithmSelection
+#        Storage of inividual shots
+        self.data_storage_frame = pd.DataFrame()
 
     def updateData(self, x, intensityValue):
         print(x)
@@ -53,12 +55,22 @@ class getOptimalMultiValueThread(QThread):
         self.parameterEvolution.iloc[-1,
                                      self.nrCalls] = intensityValue
         print(self.parameterEvolution)
+        observables_list = self.ob.ValueList
+        # TODO: add to storage
+        self.data_storage_frame =\
+        self.data_storage_frame.append(pd.DataFrame(observables_list,
+                                                    columns=[self.nrCalls]).T)
+
+    def save_run(self, name):
+        pd.concat([self.parameterEvolution.iloc[:-1,:].T, 
+                   self.data_storage_frame], axis=1,
+                   keys=['parameters', 'observable']).to_csv(name)
+        
 
     def __del__(self):
         self.wait()
 
     def run(self):
-
         self.signals.setSubscribtion.emit(True)
         x0 = self.startValues
 #        print(self.parameterClass.getStartDirection())
@@ -69,13 +81,13 @@ class getOptimalMultiValueThread(QThread):
                                        getStartDirection())
             if (len(res.shape) < 0) | (type(res) == float):
                 res = np.array([res])
-            returnValue = res
+#            returnValue = res
         else:
             res = optimize.minimize(self._func_obj, x0, method='Nelder-Mead',
                                     options={'xatol': self.xTol,
                                              'fatol': self.fTol})
-            returnValue = res.x
-        self.signals.setValues.emit(returnValue.tolist())
+#            returnValue = res.x
+#        self.signals.setValues.emit(returnValue.tolist())
         self.signals.jobFinished.emit()
         self.signals.setSubscribtion.emit(False)
 

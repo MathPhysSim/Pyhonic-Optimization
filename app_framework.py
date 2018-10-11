@@ -11,6 +11,7 @@ import ParameterSetting as pc
 import ObservableClass as ob
 import GetOptimalMultiValueThreadClass as gOVThread
 import ListSelectorClass as lsclass
+import datetime
 
 from sceleton import Ui_MainWindow
 
@@ -57,6 +58,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.doubleSpinBoxObservableEndTime.valueChanged.connect(
                 self.doubleSpinBoxObservableEndTimeChanged)
         self.japc.setSelector("LEI.USER.EARLY")
+        self.cycle = japc.getSelector()
         self.japc.subscribeParam("ER.BCTDC/Acquisition#intensities",
                                  self.onValueRecieved)
 
@@ -115,6 +117,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.japc.subscribeParam("ER.BCTDC/Acquisition#intensities",
                                  self.onValueRecieved)
         print(self.japc.getSelector())
+        self.cycle = japc.getSelector()
         print("Click")
     def itemsChanged(self):  # s is a str
 
@@ -164,7 +167,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
                                        self.doubleSpinBoxEndTime.value()])
 
     def doubleSpinBoxStartDirectionChanged(self):
-        selectedEntry = self.listSelector.parameterList[self.selectedElement]
+#        selectedEntry = self.listSelector.parameterList[self.selectedElement]
 #        print(selectedEntry['time'][1])
         self.listSelector.setItemStartDirection(self.selectedElement,
                                        self.doubleSpinBoxStartDirection.value())
@@ -260,6 +263,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     def done(self):
 #        print("DONE")
+        name = self.cycle + self.observableMethodSelection +\
+            datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        self.getOptimalValueThread.save(name)
         self.runOptimizationButton.setText('Start')
         QMessageBox.information(self, 'Scan succsessful', "Final values at: " +
                                 str(self.parameterClass.getValues()) +
@@ -287,7 +293,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.plotWidget.canvas.axs[0].set_xlabel('Nr of changes')
         self.plotWidget.canvas.axs[1].set_xlabel('Nr of changes')
         self.plotWidget.canvas.axs[0].set_ylabel('parameters (a.u.)')
-        self.plotWidget.canvas.axs[1].set_ylabel(self.observableMethodSelection)
+        self.plotWidget.canvas.axs[1].set_ylabel(self.
+                                                 observableMethodSelection)
 
         self.plotWidget.canvas.fig.tight_layout()
         self.plotWidget.canvas.draw()
