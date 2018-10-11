@@ -18,7 +18,7 @@ from sceleton import Ui_MainWindow
 
 class MyApp(QMainWindow, Ui_MainWindow):
 
-    japc = pyjapc.PyJapc(incaAcceleratorName="LEIR", noSet=False)
+    japc = pyjapc.PyJapc(incaAcceleratorName="LEIR", noSet=True)
     
 #    japc.rbacLogin()
     averageNrValue = 5.
@@ -58,7 +58,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.doubleSpinBoxObservableEndTime.valueChanged.connect(
                 self.doubleSpinBoxObservableEndTimeChanged)
         self.japc.setSelector("LEI.USER.EARLY")
-        self.cycle = japc.getSelector()
+        self.cycle = self.japc.getSelector()
         self.japc.subscribeParam("ER.BCTDC/Acquisition#intensities",
                                  self.onValueRecieved)
 
@@ -107,17 +107,14 @@ class MyApp(QMainWindow, Ui_MainWindow):
         
 
     def itemsClickedCycle(self, id):
-        print("Click")
-#        print(id.text())
-        
-#        self.japc.clearSubscribtions()
+        self.japc.clearSubscriptions()
         print("Click1")
         self.japc.setSelector(id.text())
         print("Click1")
         self.japc.subscribeParam("ER.BCTDC/Acquisition#intensities",
                                  self.onValueRecieved)
         print(self.japc.getSelector())
-        self.cycle = japc.getSelector()
+        self.cycle = self.japc.getSelector()
         print("Click")
     def itemsChanged(self):  # s is a str
 
@@ -281,13 +278,40 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     def visualizeData(self):
 
-        plotFrame = self.getOptimalValueThread.parameterEvolution.iloc[:, 1:].T
-        self.plotWidget.canvas.axs[1].clear()
-        self.plotWidget.canvas.axs[0].clear()
-        if plotFrame.shape[0] > 1:
-            plotFrame.iloc[:, :-1].plot(ax=self.plotWidget.canvas.axs[0])
-            plotFrame.iloc[:, -1].plot(ax=self.plotWidget.canvas.axs[1])
+        plotFrame =\
+            self.getOptimalValueThread.data_frame_graphics.iloc[:, 1:].T
+        init_val = plotFrame.iloc[0, -2]
+        def set_label(x):
+            if x == np.nan:
+                return 'wait'
+            return str(int(100*x/init_val))
 
+        self.plotWidget.canvas.axs[1].clear()
+        self.plotWidget.canvas.axs[2].clear()
+        self.plotWidget.canvas.axs[0].clear()
+        
+        ax_left = self.plotWidget.canvas.axs[2]
+#        if plotFrame.shape[0] > 1:
+
+        plotFrame.iloc[:, :-2].plot(ax=self.plotWidget.canvas.axs[0],
+                                    colormap='jet')
+        plotFrame.iloc[:, -2].plot(ax=self.plotWidget.canvas.axs[1])
+        x = plotFrame.index.values
+        y = plotFrame.iloc[:, -2].values
+        yerr = plotFrame.iloc[:, -1].values
+        self.plotWidget.canvas.axs[1].errorbar(x, y, yerr, marker='s',
+                                               mfc='blue', mec='lime',
+                                               ms=10, mew=4)
+        
+        new_tick_locations =\
+        np.linspace(self.plotWidget.canvas.axs[1].get_ylim()[0],
+                    self.plotWidget.canvas.axs[1].get_ylim()[1], 6)
+        # self.plotWidget.canvas.axs[1].get_yticks()
+        ax_left.set_ylim(self.plotWidget.canvas.axs[1].get_ylim())
+        ax_left.set_yticks(new_tick_locations)
+        ax_left.set_yticklabels(map(set_label, new_tick_locations))
+        ax_left.set_ylabel('rel. change (%)')
+        
         self.plotWidget.canvas.axs[0].set_title('Parameter evolution')
         self.plotWidget.canvas.axs[1].set_title('Intensity')
         self.plotWidget.canvas.axs[0].set_xlabel('Nr of changes')

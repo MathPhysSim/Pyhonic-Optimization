@@ -15,6 +15,7 @@ class ObservableClass():
         self.valueList = []
         self.japc = japc
         self.dataOut = False
+        self.dataErrorOut = False
         self.dataWait = True
         self.dataLength = length
         self.method = 'Maximum'
@@ -45,6 +46,7 @@ class ObservableClass():
             if len(cleanData) > 2:
                 cleanData = np.sort(np.array(cleanData))[2:]
             self.dataOut = np.median(cleanData)
+            self.dataErrorOut = np.sqrt(np.std(cleanData)/len(cleanData))
             self.valueList = []
             self.dataWait = False
 
