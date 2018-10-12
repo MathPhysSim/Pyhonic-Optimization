@@ -13,6 +13,7 @@ class ObservableClass():
 
     def __init__(self, japc, length=5):
         self.valueList = []
+        self.valueListBuffer = []
         self.japc = japc
         self.dataOut = False
         self.dataErrorOut = False
@@ -44,9 +45,10 @@ class ObservableClass():
         if len(self.valueList) >= self.dataLength:
             cleanData = self.valueList
             if len(cleanData) > 2:
-                cleanData = np.sort(np.array(cleanData))[2:]
+                cleanData = np.sort(np.array(cleanData))
             self.dataOut = np.median(cleanData)
-            self.dataErrorOut = np.sqrt(np.std(cleanData)/len(cleanData))
+            self.dataErrorOut = np.std(cleanData)/np.sqrt(len(cleanData))
+            self.valueListBuffer = self.valueList
             self.valueList = []
             self.dataWait = False
 

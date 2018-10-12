@@ -11,7 +11,6 @@ from scipy import optimize
 import numpy as np
 import pandas as pd
 
-
 class CommuticatorSignals(QObject):
 
     drawNow = pyqtSignal()
@@ -56,16 +55,15 @@ class getOptimalMultiValueThread(QThread):
                                      self.nrCalls] = [intensityValue,
                                                       errorValue]
         print(self.parameterEvolution)
-        observables_list = self.ob.valueList
-        # TODO: add to storage
+        observables_list = self.ob.valueListBuffer
+
         self.data_storage_frame =\
             self.data_storage_frame.append(pd.DataFrame(observables_list,
                                            columns=[self.nrCalls]).T)
 
-    def save_run(self, name):
-        pd.concat([self.parameterEvolution.iloc[:-1, :].T,
-                  self.data_storage_frame], axis=1,
-                  keys=['parameters', 'observable']).to_csv(name)
+    def save(self, name):
+        pd.concat([self.parameterEvolution.iloc[:-2, :].T,
+                  self.data_storage_frame], axis=1).to_csv(name)
 
     def __del__(self):
         self.wait()
@@ -94,17 +92,15 @@ class getOptimalMultiValueThread(QThread):
     def update_graphics(self, x):
         self.data_frame_graphics = self.parameterEvolution.copy()
         self.data_frame_graphics[self.nrCalls + 1] = np.nan
-        print('update_graphics')
         self.data_frame_graphics.iloc[:-2, self.nrCalls + 1]\
             = np.array(x).flatten()
         intensityValues = self.ob.valueList
         values = [(-1)*np.mean(intensityValues),
-                  np.sqrt(np.std(intensityValues) /
-                  len(intensityValues))]
-        print(values)
+                  np.std(intensityValues) / 
+                  np.sqrt(len(intensityValues))]
         self.data_frame_graphics.iloc[-2:, self.nrCalls + 1] =\
             np.array(values).flatten()
-        print(self.data_frame_graphics)
+            
         self.signals.drawNow.emit()
 
     def _func_obj(self, x):

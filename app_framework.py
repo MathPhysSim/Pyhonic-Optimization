@@ -12,6 +12,7 @@ import ObservableClass as ob
 import GetOptimalMultiValueThreadClass as gOVThread
 import ListSelectorClass as lsclass
 import datetime
+import matplotlib.image as mpimg
 
 from sceleton import Ui_MainWindow
 
@@ -105,17 +106,16 @@ class MyApp(QMainWindow, Ui_MainWindow):
             self.listWidgetCycle.addItem(item)
         self.listWidgetCycle.itemClicked.connect(self.itemsClickedCycle)
         
+        self.plot_init()
 
     def itemsClickedCycle(self, id):
-        self.japc.clearSubscriptions()
-        print("Click1")
+        
         self.japc.setSelector(id.text())
-        print("Click1")
+        self.japc.clearSubscriptions()
         self.japc.subscribeParam("ER.BCTDC/Acquisition#intensities",
                                  self.onValueRecieved)
-        print(self.japc.getSelector())
+        print("Set to:", self.japc.getSelector())
         self.cycle = self.japc.getSelector()
-        print("Click")
     def itemsChanged(self):  # s is a str
 
         currentSelection = [item.text() for item in
@@ -260,8 +260,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     def done(self):
 #        print("DONE")
-        name = self.cycle + self.observableMethodSelection +\
-            datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        name = self.cycle + '_' + self.observableMethodSelection + '_' +\
+            datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '.csv'
         self.getOptimalValueThread.save(name)
         self.runOptimizationButton.setText('Start')
         QMessageBox.information(self, 'Scan succsessful', "Final values at: " +
@@ -277,51 +277,79 @@ class MyApp(QMainWindow, Ui_MainWindow):
             self.japc.stopSubscriptions()
 
     def visualizeData(self):
-
+        self.set_axes_visible()
         plotFrame =\
-            self.getOptimalValueThread.data_frame_graphics.iloc[:, 1:].T
+            self.getOptimalValueThread.data_frame_graphics.iloc[:, 1:].T           
         init_val = plotFrame.iloc[0, -2]
+
         def set_label(x):
-            if x == np.nan:
-                return 'wait'
             return str(int(100*x/init_val))
 
         self.plotWidget.canvas.axs[1].clear()
-        self.plotWidget.canvas.axs[2].clear()
+#        self.plotWidget.canvas.axs[2].clear()
         self.plotWidget.canvas.axs[0].clear()
-        
+
+        ax_int = self.plotWidget.canvas.axs[1]
         ax_left = self.plotWidget.canvas.axs[2]
+
 #        if plotFrame.shape[0] > 1:
 
         plotFrame.iloc[:, :-2].plot(ax=self.plotWidget.canvas.axs[0],
                                     colormap='jet')
-        plotFrame.iloc[:, -2].plot(ax=self.plotWidget.canvas.axs[1])
+        plotFrame.iloc[:, -2].plot(ax=ax_int)
         x = plotFrame.index.values
         y = plotFrame.iloc[:, -2].values
         yerr = plotFrame.iloc[:, -1].values
-        self.plotWidget.canvas.axs[1].errorbar(x, y, yerr, marker='s',
-                                               mfc='blue', mec='lime',
-                                               ms=10, mew=4)
-        
-        new_tick_locations =\
-        np.linspace(self.plotWidget.canvas.axs[1].get_ylim()[0],
-                    self.plotWidget.canvas.axs[1].get_ylim()[1], 6)
-        # self.plotWidget.canvas.axs[1].get_yticks()
-        ax_left.set_ylim(self.plotWidget.canvas.axs[1].get_ylim())
+        ax_int.errorbar(x, y, yerr, marker='s',
+                        mfc='blue', mec='lime',
+                        ms=3, mew=2)
+        limits = ax_int.get_ylim()
+#        print('upper', limits)
+        new_tick_locations = np.linspace(limits[0], limits[1], 10)
+        ax_left.set_ylim(limits)
         ax_left.set_yticks(new_tick_locations)
-        ax_left.set_yticklabels(map(set_label, new_tick_locations))
+        try:
+            ax_left.set_yticklabels(map(set_label, new_tick_locations))
+        except:
+            pass
+        limits = ax_left.get_ylim()
         ax_left.set_ylabel('rel. change (%)')
-        
+
         self.plotWidget.canvas.axs[0].set_title('Parameter evolution')
         self.plotWidget.canvas.axs[1].set_title('Intensity')
-        self.plotWidget.canvas.axs[0].set_xlabel('Nr of changes')
+
         self.plotWidget.canvas.axs[1].set_xlabel('Nr of changes')
         self.plotWidget.canvas.axs[0].set_ylabel('parameters (a.u.)')
         self.plotWidget.canvas.axs[1].set_ylabel(self.
                                                  observableMethodSelection)
 
         self.plotWidget.canvas.fig.tight_layout()
+        limits = ax_int.get_ylim()
+
         self.plotWidget.canvas.draw()
+
+    def plot_init(self):
+
+        self.set_axes_visible(False)
+#        img = mpimg.imread('smiley_rainbow_round.jpg')
+#        self.plotWidget.canvas.axs[1].imshow(img)
+        self.plotWidget.canvas.axs[0].text(self.plotWidget.canvas.axs[1]
+                                           .get_xlim()[1]/3, .5,
+                                           r'Just bored...',
+                                           fontsize=30)
+        self.plotWidget.canvas.axs[1].text(self.plotWidget.canvas.axs[1]
+                                           .get_xlim()[1]/4, .5,
+                                           r'You have a task?',
+                                           fontsize=30)
+
+    def set_axes_visible(self, setting=True):
+
+        self.plotWidget.canvas.axs[0].axes.get_xaxis().set_visible(setting)
+        self.plotWidget.canvas.axs[0].axes.get_yaxis().set_visible(setting)
+        self.plotWidget.canvas.axs[1].axes.get_xaxis().set_visible(setting)
+        self.plotWidget.canvas.axs[1].axes.get_yaxis().set_visible(setting)
+        self.plotWidget.canvas.axs[2].axes.get_xaxis().set_visible(setting)   
+        self.plotWidget.canvas.axs[2].axes.get_yaxis().set_visible(setting)
 
     def closeEvent(self, event):
         reply = QMessageBox.question(self, 'Message', "Are you sure to quit?",
