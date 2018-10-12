@@ -13,6 +13,7 @@ import GetOptimalMultiValueThreadClass as gOVThread
 import ListSelectorClass as lsclass
 import datetime
 import matplotlib.image as mpimg
+import zen
 
 from sceleton import Ui_MainWindow
 
@@ -339,8 +340,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
                                            fontsize=30)
         self.plotWidget.canvas.axs[1].text(self.plotWidget.canvas.axs[1]
                                            .get_xlim()[1]/4, .5,
-                                           r'You have a task?',
-                                           fontsize=30)
+                                           zen.Zen().get_text(),
+                                           fontsize=14)
 
     def set_axes_visible(self, setting=True):
 
