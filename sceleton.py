@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'sceleton.ui'
 #
-# Created by: PyQt5 UI code generator 5.6
+# Created by: PyQt5 UI code generator 5.9.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -319,6 +319,9 @@ class Ui_MainWindow(object):
         self.buttonRestoreOldValues = QtWidgets.QPushButton(self.centralwidget)
         self.buttonRestoreOldValues.setObjectName("buttonRestoreOldValues")
         self.verticalLayout_2.addWidget(self.buttonRestoreOldValues)
+        self.buttonSetMaximum = QtWidgets.QPushButton(self.centralwidget)
+        self.buttonSetMaximum.setObjectName("buttonSetMaximum")
+        self.verticalLayout_2.addWidget(self.buttonSetMaximum)
         self.label_3 = QtWidgets.QLabel(self.centralwidget)
         font = QtGui.QFont()
         font.setFamily("AR PL UMing CN")
@@ -370,6 +373,7 @@ class Ui_MainWindow(object):
         self.label_7.setText(_translate("MainWindow", "End Time"))
         self.runOptimizationButton.setText(_translate("MainWindow", "Start"))
         self.buttonRestoreOldValues.setText(_translate("MainWindow", "Restore old values"))
+        self.buttonSetMaximum.setText(_translate("MainWindow", "Set maximum of run"))
         self.label_3.setText(_translate("MainWindow", "Don\'t worry be happy! Questions: simon.hirlaender@cern.ch"))
         self.imageLabel.setText(_translate("MainWindow", "TextLabel"))
 

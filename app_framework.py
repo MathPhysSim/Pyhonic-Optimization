@@ -20,7 +20,7 @@ from sceleton import Ui_MainWindow
 
 class MyApp(QMainWindow, Ui_MainWindow):
 
-    japc = pyjapc.PyJapc(incaAcceleratorName="LEIR", noSet=True)
+    japc = pyjapc.PyJapc(incaAcceleratorName="LEIR", noSet=False)
     
 #    japc.rbacLogin()
     averageNrValue = 5.
@@ -238,7 +238,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
                     self.setValues)
             self.getOptimalValueThread.signals.drawNow.\
                 connect(self.visualizeData)
-            self.getOptimalValueThread.signals.connect(self.set_maximum)
+            self.getOptimalValueThread.signals.setMaximum.connect(self.set_maximum)
             self.getOptimalValueThread.signals.jobFinished.connect(self.done)
             self.getOptimalValueThread.start()
             self.runOptimizationButton.setText('Cancel')

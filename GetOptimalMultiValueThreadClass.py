@@ -110,9 +110,11 @@ class getOptimalMultiValueThread(QThread):
         self.data_frame_graphics.iloc[-2:, self.nrCalls + 1] =\
             np.array(values).flatten()
         max_idx = self.data_frame_graphics.iloc[-2, :].idxmax()
-        self.data_max = self.data_frame_graphics.iloc[:, max_idx]
+        if not(np.isnan(max_idx)):
+            self.data_max = self.data_frame_graphics.iloc[:, max_idx]
+            self.signals.setMaximum.emit(self.data_max.iloc[:-2].tolist())
         self.signals.drawNow.emit()
-        self.signals.setMaximum.emit(self.data_max.iloc[:-2].tolist())
+        
 
     def _func_obj(self, x):
         self.signals.setValues.emit(x.tolist())
