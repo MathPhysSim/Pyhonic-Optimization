@@ -251,15 +251,14 @@ class MyApp(QMainWindow, Ui_MainWindow):
             self.getOptimalValueThread.wait()
             self.listWidgetCycle.setEnabled(True)
             self.runOptimizationButton.setText('Start')
+
     def set_maximum(self, x):
         self.max_value = x
-        
+
     def setValues(self, x):
-#        print(x)
         self.parameterClass.setNewValues(x)
 
     def done(self):
-#        print("DONE")
         name = self.cycle + '_' + self.observableMethodSelection + '_' +\
             datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '.csv'
         self.getOptimalValueThread.save(name)

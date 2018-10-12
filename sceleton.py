@@ -353,7 +353,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Injection Optimizer V 0.3.0"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Injection Optimizer V 1.0.0 Lewis release"))
         self.label_12.setText(_translate("MainWindow", "Cycle selection"))
         self.label_11.setText(_translate("MainWindow", "Optimization method"))
         self.radioButtonPowell.setText(_translate("MainWindow", "Powell"))
