@@ -41,6 +41,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
         self.buttonRestoreOldValues.clicked.connect(
                 self.buttonRestoreOldValuesPressed)
+        self.buttonSetMaximum.clicked.connect(
+                self.buttonSetMaximumPressed)
 
         self.spinBoxXTolValue.valueChanged.connect(
                 self.spinBoxXTolValueChanged)
@@ -54,7 +56,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
                 self.doubleSpinBoxEndTimeChanged)
         self.doubleSpinBoxStartDirection.valueChanged.connect(
                 self.doubleSpinBoxStartDirectionChanged)
-        
+
         self.doubleSpinBoxObservableStartTime.valueChanged.connect(
                 self.doubleSpinBoxObservableStartTimeChanged)
         self.doubleSpinBoxObservableEndTime.valueChanged.connect(
@@ -71,8 +73,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.xTol = 0.01
         self.fTol = 0.01
         self.x0 = []
+        self.max_value = []
         self.selectedElement = []
-        self.observableTime = np.array([0,0])
+        self.observableTime = np.array([0, 0])
 
         self.spinBoxXTolValue.setValue(self.xTol)
         self.spinBoxFTolValue.setValue(self.fTol)
@@ -165,26 +168,16 @@ class MyApp(QMainWindow, Ui_MainWindow):
                                        self.doubleSpinBoxEndTime.value()])
 
     def doubleSpinBoxStartDirectionChanged(self):
-#        selectedEntry = self.listSelector.parameterList[self.selectedElement]
-#        print(selectedEntry['time'][1])
         self.listSelector.setItemStartDirection(self.selectedElement,
                                        self.doubleSpinBoxStartDirection.value())
 
     def doubleSpinBoxObservableStartTimeChanged(self):
-#        print("touchme1")
-        
         self.ob.timeInterval[0] = self.doubleSpinBoxObservableStartTime.value()
-#        print(self.ob.timeInterval)
         self.doubleSpinBoxObservableEndTime.\
         setMinimum(self.ob.timeInterval[0]+1)
 
     def doubleSpinBoxObservableEndTimeChanged(self):
-#        print("touchme2")
-        
         self.ob.timeInterval[1] = self.doubleSpinBoxObservableEndTime.value()
-#        print(self.ob.timeInterval)
-#        self.doubleSpinBoxObservableStartTime.\
-#        setMaximum(self.ob.timeInterval[1])
 
     def buttonGroupSelected(self, id):
         self.algorithmSelection = id.text()
@@ -194,7 +187,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         if (self.observableMethodSelection == 'Area') |\
            (self.observableMethodSelection == 'Transmission'):
             self.doubleSpinBoxObservableEndTime.\
-            setMinimum(self.ob.timeInterval[0]+1)
+                 setMinimum(self.ob.timeInterval[0] + 1)
             self.doubleSpinBoxObservableStartTime.setEnabled(True)
             self.doubleSpinBoxObservableEndTime.setEnabled(True)
         else:
@@ -204,6 +197,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     def buttonRestoreOldValuesPressed(self):
         self.setValues(self.x0)
+
+    def buttonSetMaximumPressed(self):
+        self.setValues(self.max_value)
 
     def spinBoxXTolValueChanged(self):
         self.xTol = self.spinBoxXTolValue.value()
@@ -242,6 +238,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
                     self.setValues)
             self.getOptimalValueThread.signals.drawNow.\
                 connect(self.visualizeData)
+            self.getOptimalValueThread.signals.connect(self.set_maximum)
             self.getOptimalValueThread.signals.jobFinished.connect(self.done)
             self.getOptimalValueThread.start()
             self.runOptimizationButton.setText('Cancel')
@@ -254,7 +251,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
             self.getOptimalValueThread.wait()
             self.listWidgetCycle.setEnabled(True)
             self.runOptimizationButton.setText('Start')
-
+    def set_maximum(self, x):
+        self.max_value = x
+        
     def setValues(self, x):
 #        print(x)
         self.parameterClass.setNewValues(x)
@@ -303,7 +302,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         yerr = plotFrame.iloc[:, -1].values
         ax_int.errorbar(x, y, yerr, marker='s',
                         mfc='blue', mec='lime',
-                        ms=3, mew=2)
+                        ms=7, mew=4)
         limits = ax_int.get_ylim()
 #        print('upper', limits)
         new_tick_locations = np.linspace(limits[0], limits[1], 10)
@@ -334,11 +333,11 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.set_axes_visible(False)
 #        img = mpimg.imread('smiley_rainbow_round.jpg')
 #        self.plotWidget.canvas.axs[1].imshow(img)
-        self.plotWidget.canvas.axs[0].text(self.plotWidget.canvas.axs[1]
-                                           .get_xlim()[1]/3, .5,
-                                           r'Just bored...',
-                                           fontsize=30)
         self.plotWidget.canvas.axs[1].text(self.plotWidget.canvas.axs[1]
+                                           .get_xlim()[1]/3, .5,
+                                           r'Stay tuned...',
+                                           fontsize=30)
+        self.plotWidget.canvas.axs[0].text(self.plotWidget.canvas.axs[1]
                                            .get_xlim()[1]/4, .5,
                                            zen.Zen().get_text(),
                                            fontsize=14)

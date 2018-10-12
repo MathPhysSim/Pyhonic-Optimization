@@ -787,6 +787,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="buttonSetMaximum">
+        <property name="text">
+         <string>Set maximum of run</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="label_3">
         <property name="font">
          <font>

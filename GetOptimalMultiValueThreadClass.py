@@ -10,6 +10,7 @@ import time
 from scipy import optimize
 import numpy as np
 import pandas as pd
+import os
 
 class CommuticatorSignals(QObject):
 
@@ -17,6 +18,7 @@ class CommuticatorSignals(QObject):
     jobFinished = pyqtSignal()
     setValues = pyqtSignal(list)
     setSubscribtion = pyqtSignal(bool)
+    setMaximum = pyqtSignal(list)
 
 
 class getOptimalMultiValueThread(QThread):
@@ -42,7 +44,9 @@ class getOptimalMultiValueThread(QThread):
 
         self.xTol = xTol
         self.fTol = fTol
+#        print(self.fTol)
         self.algorithmSelection = algorithmSelection
+        self.data_max = pd.DataFrame()
 # Methods...
         self.updateData(self.startValues, np.nan, np.nan)
 
@@ -56,12 +60,16 @@ class getOptimalMultiValueThread(QThread):
                                                       errorValue]
         print(self.parameterEvolution)
         observables_list = self.ob.valueListBuffer
-
+        observables_list = np.array(observables_list)*(-1)
         self.data_storage_frame =\
             self.data_storage_frame.append(pd.DataFrame(observables_list,
                                            columns=[self.nrCalls]).T)
 
     def save(self, name):
+        save_path = 'saved_data/'
+        name = save_path+name
+        if not os.path.exists(save_path):
+            os.makedirs(save_path)
         pd.concat([self.parameterEvolution.iloc[:-2, :].T,
                   self.data_storage_frame], axis=1).to_csv(name)
 
@@ -90,18 +98,21 @@ class getOptimalMultiValueThread(QThread):
         self.signals.setSubscribtion.emit(False)
 
     def update_graphics(self, x):
+        "updates graphics and max value"
         self.data_frame_graphics = self.parameterEvolution.copy()
         self.data_frame_graphics[self.nrCalls + 1] = np.nan
         self.data_frame_graphics.iloc[:-2, self.nrCalls + 1]\
             = np.array(x).flatten()
         intensityValues = self.ob.valueList
         values = [(-1)*np.mean(intensityValues),
-                  np.std(intensityValues) / 
+                  np.std(intensityValues) /
                   np.sqrt(len(intensityValues))]
         self.data_frame_graphics.iloc[-2:, self.nrCalls + 1] =\
             np.array(values).flatten()
-            
+        max_idx = self.data_frame_graphics.iloc[-2, :].idxmax()
+        self.data_max = self.data_frame_graphics.iloc[:, max_idx]
         self.signals.drawNow.emit()
+        self.signals.setMaximum.emit(self.data_max.iloc[:-2].tolist())
 
     def _func_obj(self, x):
         self.signals.setValues.emit(x.tolist())
