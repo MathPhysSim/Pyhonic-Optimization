@@ -1,20 +1,14 @@
-from PyQt5.QtWidgets import QMainWindow, QMessageBox
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-from PyQt5.QtCore import QThread, pyqtSignal
-
-
+import datetime
 import numpy as np
 import pyjapc
-import ParameterSetting as pc
-import ObservableClass as ob
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+
 import GetOptimalMultiValueThreadClass as gOVThread
 import ListSelectorClass as lsclass
-import datetime
-import matplotlib.image as mpimg
+import ObservableClass as ob
+import ParameterSetting as pc
 import zen
-
 from sceleton import Ui_MainWindow
 
 

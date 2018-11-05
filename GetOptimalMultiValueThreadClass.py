@@ -81,7 +81,7 @@ class getOptimalMultiValueThread(QThread):
         x0 = self.startValues
 #        print(self.parameterClass.getStartDirection())
         if self.algorithmSelection == 'Powell':
-            res = optimize.fmin_powell(self._func_obj, x0, xtol=self.xTol,
+            res = optimize.fmin_powell(self.set_function, x0, xtol=self.xTol,
                                        ftol=self.fTol,
                                        direc=self.parameterClass.
                                        getStartDirection())
@@ -89,7 +89,7 @@ class getOptimalMultiValueThread(QThread):
                 res = np.array([res])
 #            returnValue = res
         else:
-            res = optimize.minimize(self._func_obj, x0, method='Nelder-Mead',
+            res = optimize.minimize(self.set_function, x0, method='Nelder-Mead',
                                     options={'xatol': self.xTol,
                                              'fatol': self.fTol})
 #            returnValue = res.x
@@ -117,20 +117,33 @@ class getOptimalMultiValueThread(QThread):
                                          iloc[:-2, 0]).tolist())
         self.signals.drawNow.emit()
 
-    def _func_obj(self, x):
-        self.signals.setValues.emit(x.tolist())
-        self.ob.reset()
-        while(self.ob.dataWait):
-            if self.cancelFlag:
-                self.signals.setSubscribtion.emit(False)
-                # TODO : check saving in this case
-                self.terminate()
-            self.update_graphics(x-self.parameterEvolution.iloc[:-2, 0])
-            time.sleep(2)
-        self.ob.dataWait = True
-        dataFinal = self.ob.dataOut
+    def set_function(self, x):
+
+        previous_change = self.parameterEvolution.iloc[:-2, self.nrCalls]
+        current_change = x-self.parameterEvolution.iloc[:-2,0]
+        small_change = np.allclose(current_change, previous_change, atol=0.01)
+
+        if small_change:
+            dataFinal = self.parameterEvolution.iloc[-2, self.nrCalls]
+            intensity = self.parameterEvolution.iloc[-2, self.nrCalls]
+            error = self.parameterEvolution.iloc[-1, self.nrCalls]
+        else:
+            self.signals.setValues.emit(x.tolist())
+            self.ob.reset()
+            while(self.ob.dataWait):
+                if self.cancelFlag:
+                    self.signals.setSubscribtion.emit(False)
+                    # TODO : check saving in this case
+                    self.terminate()
+                self.update_graphics(x-self.parameterEvolution.iloc[:-2, 0])
+                time.sleep(2)
+            self.ob.dataWait = True
+            dataFinal = self.ob.dataOut
+            intensity = (-1) * self.ob.dataOut
+            error = self.ob.dataErrorOut
+
         self.nrCalls += 1
         self.updateData(x-self.parameterEvolution.iloc[:-2, 0],
-                        (-1) * self.ob.dataOut, self.ob.dataErrorOut)
+                        (-1) * intensity, error)
         self.signals.drawNow.emit()
         return dataFinal
