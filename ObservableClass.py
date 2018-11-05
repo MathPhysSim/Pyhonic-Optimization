@@ -29,19 +29,15 @@ class ObservableClass():
         if self.method == 'Maximum':
             x = np.min(inArray)
         elif self.method == 'Area':
-#            x = np.mean(inArray[self.timeInterval[0]:self.timeInterval[1]])
-#             print("Value xtime")
-#             print(self.timeInterval)
-             x = np.mean(inArray[self.timeInterval[0]:self.timeInterval[1]])
-#             print("Value x")
-#             print(x)
+            x = np.mean(inArray[self.timeInterval[0]:self.timeInterval[1]])
+            self.valueList.append(x)
         elif self.method == 'Transmission':
-
-            x = (-1)*(inArray[self.timeInterval[1]]/inArray[self.timeInterval[0]])
-#        normVal = self.japc.getParam("EI.BCT10/Acquisition#chargesLinacSingle")
-#        if normVal > 2:
-#            self.valueList.append(x/normVal)
-        self.valueList.append(x)
+#            x = (inArray[self.timeInterval[1]]/inArray[self.timeInterval[0]])
+            x = (inArray[self.timeInterval[0]])
+#            x = (inArray[self.timeInterval[0]])
+            normVal = self.japc.getParam("EI.BCT10/Acquisition#chargesLinacSingle")
+            if normVal > 0.15:
+                self.valueList.append(x/normVal)        
         if len(self.valueList) >= self.dataLength:
             cleanData = self.valueList
             if len(cleanData) > 2:

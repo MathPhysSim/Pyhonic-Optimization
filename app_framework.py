@@ -22,7 +22,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     japc = pyjapc.PyJapc(incaAcceleratorName="LEIR", noSet=False)
     
-#    japc.rbacLogin()
+    japc.rbacLogin()
     averageNrValue = 5.
     parameterClass = pc.ParameterClass(japc)
     algorithmSelection = 'Powell'
@@ -105,7 +105,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
                          "LEI.USER.MDOPTIC", "LEI.USER.AMDRF",
                          "LEI.USER.MDEARLY", "LEI.USER.AMDOPTIC",
                          "LEI.USER.MDNOM", "LEI.USER.AMDNOM",
-                          "LEI.USER.ANOMINAL","LEI.USER.MDRF"]:
+                          "LEI.USER.ANOMINAL","LEI.USER.MDRF",
+                          "LEI.USER.FL_NO_MD"]:
             item = QListWidgetItem(itemName)
             self.listWidgetCycle.addItem(item)
         self.listWidgetCycle.itemClicked.connect(self.itemsClickedCycle)

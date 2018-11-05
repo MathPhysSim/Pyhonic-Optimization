@@ -8,10 +8,18 @@ Created on Tue Jun  5 21:30:16 2018
 
 class ListSelector():
 
-    parameterList = { "Linac3 Tank2 amp":
+    parameterList = { "Linac3 ITF.DHZ02":
+                    {"name": "ITF.DHZ02/REF.PULSE.REF#VALUE",
+                      "type": "scalarNonLSA", 'startDirection': 0.5}, 
+                      "Linac3 ITF.DHZ03":
+                    {"name": "ITF.DHZ03/REF.PULSE.REF#VALUE",
+                      "type": "scalarNonLSA", 'startDirection': 0.5}, 
+                      "Linac3 ITF.DHZ04":
+                    {"name": "ITF.DHZ04/REF.PULSE.REF#VALUE",
+                      "type": "scalarNonLSA", 'startDirection': 0.5}, 
+                     "Linac3 Tank2 amp":
                     {"name": "IA2.RF/SettiPPMProperty#ref_amplit",
                       "type": "scalarNonLSA", 'startDirection': 1e-3}, 
-
                       "Linac3 Tank2 phase":
                     {"name": "IA2.RF/SettiPPMProperty#ref_phase",
                       "type": "scalarNonLSA", 'startDirection': 1e-3}, 
@@ -51,25 +59,25 @@ class ListSelector():
                     
                     "EI.BVN10/K":
                      {"name": "rmi://virtual_sps/logical.EI.BVN10/K",
-                      "type": "scalar", 'startDirection': 1e-3},
+                      "type": "scalar", 'startDirection': 5e-4},
                      "EI.BVN20/K":
                          {"name": "rmi://virtual_sps/logical.EI.BVN20/K",
-                          "type": "scalar", 'startDirection': 1e-3},
+                          "type": "scalar", 'startDirection': 5e-4},
                      "EI.BHN10/K":
                          {"name": "rmi://virtual_sps/logical.EI.BHN10/K",
                           "type": "scalar", 'startDirection': 1e-3},
                      "ETL.BHN20-INJ/K":
                          {"name": "rmi://virtual_sps/logical.ETL.BHN20-INJ/K",
                           "type": "scalar", 'startDirection': 1e-3},
-#                         "ITH.DHZ10/K":
-#                             {"name": "rmi://virtual_sps/logical.ITH.DHZ10/K",
-#                              "type": "scalar"},
-#                         "ITH.DHZ11/K":
-#                             {"name": "rmi://virtual_sps/logical.ITH.DHZ11/K",
-#                              "type": "scalar"},
-#                         "ITH.DHZ21/K":
-#                             {"name": "rmi://virtual_sps/logical.ITH.DHZ21/K",
-#                              "type": "scalar"},
+                         "ITH.DHZ10/K":
+                             {"name": "rmi://virtual_sps/logical.ITH.DHZ10/K",
+                              "type": "scalar", 'startDirection': 1e-4},
+                         "ITH.DHZ11/K":
+                             {"name": "rmi://virtual_sps/logical.ITH.DHZ11/K",
+                              "type": "scalar", 'startDirection': 1e-4},
+                         "ITH.DHZ21/K":
+                             {"name": "rmi://virtual_sps/logical.ITH.DHZ21/K",
+                              "type": "scalar", 'startDirection': 1e-4},
 #                         "ITE.BHN10/K":
 #                             {"name": "rmi://virtual_sps/logical.ITE.BHN10/K",
 #                              "type": "scalar"},

@@ -14,16 +14,20 @@ import ListSelectorClass as lsclass
 
 
 japc = pyjapc.PyJapc(incaAcceleratorName="LEIR", noSet=False)
-japc.setSelector("ALL.USER.ALL)")
+japc.setSelector("LEI.USER.EARLY")
+
+japc.rbacLogin()
+
 parameterClass = pc.ParameterClass(japc)
 
 
 ls = lsclass.ListSelector()
-ls.setSelection(["Linac3 RC StartPhase"])
-# japc.rbacLogin(loginDialog=True)
+ls.setSelection([
+                 "ITH.DHZ10/K"])
+
 parameterClass.addParameters(ls.getSelectedItemsDict())
 print("Current Value")
 print(parameterClass.getValues())
 setValue = parameterClass.getValues()
-parameterClass.setNewValues((setValue-.0001))
+parameterClass.setNewValues(setValue)
 print(parameterClass.getValues())
