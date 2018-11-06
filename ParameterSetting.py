@@ -28,6 +28,11 @@ class ParameterClass():
                        in self.memberParameters]
         return startVector
 
+    def getMinimalAcceptedChangeVector(self):
+        minimalAcceptedChangeVector = [self.memberParameters[key].minimalAcceptedChange for key
+                       in self.memberParameters]
+        return minimalAcceptedChangeVector
+
     def getStartDirection(self):
         startVec = []
         for key in self.memberParameters:
@@ -69,12 +74,10 @@ class parameterObject():
             self.object = constFunctionClass(japcIn, self.parameterName,
                                              parameterNameDict['time'])
         elif self.parameterType == 'functionSquare':
-#            print("parameterObject1")
             self.object = squareFunctionClass(japcIn, self.parameterName,
                                               parameterNameDict['time'],
                                               parameterNameDict['delta'],
                                               parameterNameDict['range'])
-#            print("parameterObject2")
         elif self.parameterType == 'functionList':
             self.object = constFunctionListClass(japcIn, self.parameterName,
                                               parameterNameDict['time'])
@@ -82,9 +85,10 @@ class parameterObject():
             self.object = scalarClassNonLsa(japcIn, self.parameterName)    
         else:
             self.object = scalarClass(japcIn, self.parameterName)
-#        print("parameterObject3")    
         self.x0 = self.getValue()
-#        print("parameterObject4")
+        self.minimalAcceptedChange = parameterNameDict["minimalAcceptedChange"]
+
+
 
     def getValue(self):
         return self.object.getValue()

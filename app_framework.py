@@ -99,6 +99,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.listWidget.sortItems()   
         self.listWidget.itemSelectionChanged.connect(self.itemsChanged)
         self.listWidget.itemClicked.connect(self.itemSelected)
+
         for itemName in ["LEI.USER.EARLY", "LEI.USER.NOMINAL",
                          "LEI.USER.MDOPTIC", "LEI.USER.AMDRF",
                          "LEI.USER.MDEARLY", "LEI.USER.AMDOPTIC",
@@ -172,6 +173,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
     def doubleSpinBoxStartDirectionChanged(self):
         self.listSelector.setItemStartDirection(self.selectedElement,
                                        self.doubleSpinBoxStartDirection.value())
+        self.listSelector.setItemMinimalAcceptedChange(self.selectedElement,
+                                       self.doubleSpinBoxStartDirection.value()/25)
 
     def doubleSpinBoxMinimalAcceptedChangeChanged(self):
         self.listSelector.setItemMinimalAcceptedChange(self.selectedElement,

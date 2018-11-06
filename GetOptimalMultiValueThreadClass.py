@@ -32,13 +32,12 @@ class getOptimalMultiValueThread(QThread):
         self.parameterClass = parameterClass
         self.index = self.parameterClass.getNames()
         self.index.extend(["intensity", "error"])
-        self.parameterEvolution = pd.DataFrame(
-                index=self.index)
-
+        self.parameterEvolution = pd.DataFrame(index=self.index)
         self.cancelFlag = False
         self.signals = CommuticatorSignals()
         self.nrCalls = 0
         self.startValues = np.array(self.parameterClass.getStartVector())
+        self.minimalAcceptedChangeVector = np.array(self.parameterClass.getMinimalAcceptedChangeVector())
         self.data_storage_frame = pd.DataFrame()
         self.data_frame_graphics = pd.DataFrame()
 
@@ -122,16 +121,16 @@ class getOptimalMultiValueThread(QThread):
         if self.nrCalls>0:
             previous_change = self.parameterEvolution.iloc[:-2, self.nrCalls]
             current_change = x-self.parameterEvolution.iloc[:-2,0]
-            small_change = np.allclose(current_change, previous_change, atol=0.0001)
+            small_change = (abs(current_change- previous_change)<self.minimalAcceptedChangeVector).all()
         else:
             small_change = False
 
         if (small_change):
             print('in case')
-            dataFinal = self.parameterEvolution.iloc[-2, self.nrCalls]
+            dataFinal = (-1)*self.parameterEvolution.iloc[-2, self.nrCalls]
             intensity = self.parameterEvolution.iloc[-2, self.nrCalls]
             error = self.parameterEvolution.iloc[-1, self.nrCalls]
-            # self.update_graphics(x - self.parameterEvolution.iloc[:-2, 0])
+            self.update_graphics(x - self.parameterEvolution.iloc[:-2, 0])
         else:
 
             self.signals.setValues.emit(x.tolist())
