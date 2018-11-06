@@ -51,7 +51,7 @@ class getOptimalMultiValueThread(QThread):
         self.updateData(self.startValues, np.nan, np.nan)
 
     def updateData(self, x, intensityValue, errorValue):
-        print(x)
+        # print(x)
         self.parameterEvolution[self.nrCalls] = np.nan
         self.parameterEvolution.iloc[:-2,
                                      self.nrCalls] = np.array(x).flatten()
@@ -118,16 +118,22 @@ class getOptimalMultiValueThread(QThread):
         self.signals.drawNow.emit()
 
     def set_function(self, x):
+        print(self.parameterEvolution)
+        if self.nrCalls>0:
+            previous_change = self.parameterEvolution.iloc[:-2, self.nrCalls]
+            current_change = x-self.parameterEvolution.iloc[:-2,0]
+            small_change = np.allclose(current_change, previous_change, atol=0.0001)
+        else:
+            small_change = False
 
-        previous_change = self.parameterEvolution.iloc[:-2, self.nrCalls]
-        current_change = x-self.parameterEvolution.iloc[:-2,0]
-        small_change = np.allclose(current_change, previous_change, atol=0.01)
-
-        if small_change:
+        if (small_change):
+            print('in case')
             dataFinal = self.parameterEvolution.iloc[-2, self.nrCalls]
             intensity = self.parameterEvolution.iloc[-2, self.nrCalls]
             error = self.parameterEvolution.iloc[-1, self.nrCalls]
+            # self.update_graphics(x - self.parameterEvolution.iloc[:-2, 0])
         else:
+
             self.signals.setValues.emit(x.tolist())
             self.ob.reset()
             while(self.ob.dataWait):
@@ -137,13 +143,14 @@ class getOptimalMultiValueThread(QThread):
                     self.terminate()
                 self.update_graphics(x-self.parameterEvolution.iloc[:-2, 0])
                 time.sleep(2)
+
             self.ob.dataWait = True
             dataFinal = self.ob.dataOut
             intensity = (-1) * self.ob.dataOut
             error = self.ob.dataErrorOut
 
         self.nrCalls += 1
-        self.updateData(x-self.parameterEvolution.iloc[:-2, 0],
-                        (-1) * intensity, error)
+        self.updateData(x-self.parameterEvolution.iloc[:-2, 0], intensity, error)
+
         self.signals.drawNow.emit()
         return dataFinal

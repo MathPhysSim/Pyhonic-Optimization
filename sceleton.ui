@@ -723,28 +723,21 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
-         <widget class="QDoubleSpinBox" name="doubleSpinBoxStartDirection">
-          <property name="decimals">
-           <number>5</number>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
+        <item row="2" column="0">
          <widget class="QLabel" name="label_6">
           <property name="text">
            <string>Start time</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
+        <item row="2" column="1">
          <widget class="QLabel" name="label_7">
           <property name="text">
            <string>End Time</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="0">
+        <item row="3" column="0">
          <widget class="QDoubleSpinBox" name="doubleSpinBoxStartTime">
           <property name="enabled">
            <bool>false</bool>
@@ -757,7 +750,7 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
+        <item row="3" column="1">
          <widget class="QDoubleSpinBox" name="doubleSpinBoxEndTime">
           <property name="enabled">
            <bool>false</bool>
@@ -767,6 +760,30 @@
           </property>
           <property name="maximum">
            <double>3600.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QDoubleSpinBox" name="doubleSpinBoxStartDirection">
+          <property name="decimals">
+           <number>5</number>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="label_14">
+          <property name="text">
+           <string>Minimal accepted change</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QDoubleSpinBox" name="doubleSpinBoxMinimalAcceptedChange">
+          <property name="decimals">
+           <number>6</number>
+          </property>
+          <property name="singleStep">
+           <double>0.000001000000000</double>
           </property>
          </widget>
         </item>
@@ -797,8 +814,10 @@
        <widget class="QLabel" name="label_3">
         <property name="font">
          <font>
-          <family>AR PL UMing CN</family>
-          <pointsize>20</pointsize>
+          <family>URW Gothic L</family>
+          <pointsize>14</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
         </property>
         <property name="frameShape">

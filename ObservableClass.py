@@ -24,27 +24,30 @@ class ObservableClass():
 
     def setValue(self, inArray):
         inArray = np.array(inArray[395:])*(-1)
-#        print('inArray')
 #        print(inArray)
         if self.method == 'Maximum':
             x = np.min(inArray)
         elif self.method == 'Area':
             x = np.mean(inArray[self.timeInterval[0]:self.timeInterval[1]])
-            self.valueList.append(x)
+            # self.valueList.append(x)
         elif self.method == 'Transmission':
 #            x = (inArray[self.timeInterval[1]]/inArray[self.timeInterval[0]])
             x = (inArray[self.timeInterval[0]])
 #            x = (inArray[self.timeInterval[0]])
             normVal = self.japc.getParam("EI.BCT10/Acquisition#chargesLinacSingle")
             if normVal > 0.15:
-                self.valueList.append(x/normVal)        
+                x = (x/normVal)
+        self.valueList.append(x)
+
         if len(self.valueList) >= self.dataLength:
             cleanData = self.valueList
-            if len(cleanData) > 2:
-                cleanData = np.sort(np.array(cleanData))
+            # if len(cleanData) > 2:
+            #     cleanData = np.sort(np.array(cleanData))
+
             self.dataOut = np.median(cleanData)
             self.dataErrorOut = np.std(cleanData)/np.sqrt(len(cleanData))
             self.valueListBuffer = self.valueList
+            # print('inArray out')
             self.valueList = []
             self.dataWait = False
 

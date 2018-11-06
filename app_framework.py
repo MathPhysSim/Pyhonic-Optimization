@@ -16,8 +16,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     japc = pyjapc.PyJapc(incaAcceleratorName="LEIR", noSet=False)
     
-    japc.rbacLogin()
-    averageNrValue = 5.
+    # japc.rbacLogin()
+    averageNrValue = 1.
     parameterClass = pc.ParameterClass(japc)
     algorithmSelection = 'Powell'
     observableMethodSelection = 'Maximum'
@@ -55,7 +55,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
                 self.doubleSpinBoxObservableStartTimeChanged)
         self.doubleSpinBoxObservableEndTime.valueChanged.connect(
                 self.doubleSpinBoxObservableEndTimeChanged)
-        self.japc.setSelector("LEI.USER.EARLY")
+        self.doubleSpinBoxMinimalAcceptedChange.valueChanged.connect(
+            self.doubleSpinBoxMinimalAcceptedChangeChanged)
+        self.japc.setSelector("LEI.USER.MDEARLY")
         self.cycle = self.japc.getSelector()
         self.japc.subscribeParam("ER.BCTDC/Acquisition#intensities",
                                  self.onValueRecieved)
@@ -66,6 +68,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
 #        self.visualizeData()
         self.xTol = 0.01
         self.fTol = 0.01
+        self.min_accepted_change = []
         self.x0 = []
         self.max_value = []
         self.selectedElement = []
@@ -92,6 +95,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
             else:
                 item.setBackground(QColor(0, 255, 0))
             self.listWidget.addItem(item)
+
         self.listWidget.sortItems()   
         self.listWidget.itemSelectionChanged.connect(self.itemsChanged)
         self.listWidget.itemClicked.connect(self.itemSelected)
@@ -130,7 +134,10 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.selectedElement = id.text()
         selectedEntry = self.listSelector.parameterList[self.selectedElement]
         self.doubleSpinBoxStartDirection.setValue(
-                    float(selectedEntry['startDirection']))   
+                    float(selectedEntry['startDirection']))
+        self.doubleSpinBoxMinimalAcceptedChange.setValue(
+                    float(selectedEntry["minimalAcceptedChange"]))
+
         if (selectedEntry['type'] == 'functionSquare')|(self.selectedElement=="ETL.GSBHN10/KICK")|(selectedEntry['type'] == 'functionList'):
             self.doubleSpinBoxStartTime.setEnabled(True)
             self.doubleSpinBoxEndTime.setEnabled(True)
@@ -166,6 +173,10 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.listSelector.setItemStartDirection(self.selectedElement,
                                        self.doubleSpinBoxStartDirection.value())
 
+    def doubleSpinBoxMinimalAcceptedChangeChanged(self):
+        self.listSelector.setItemMinimalAcceptedChange(self.selectedElement,
+                                       self.doubleSpinBoxMinimalAcceptedChange.value())
+
     def doubleSpinBoxObservableStartTimeChanged(self):
         self.ob.timeInterval[0] = self.doubleSpinBoxObservableStartTime.value()
         self.doubleSpinBoxObservableEndTime.\
@@ -173,6 +184,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     def doubleSpinBoxObservableEndTimeChanged(self):
         self.ob.timeInterval[1] = self.doubleSpinBoxObservableEndTime.value()
+
+
+
 
     def buttonGroupSelected(self, id):
         self.algorithmSelection = id.text()

@@ -10,74 +10,74 @@ class ListSelector():
 
     parameterList = { "Linac3 ITF.DHZ02":
                     {"name": "ITF.DHZ02/REF.PULSE.REF#VALUE",
-                      "type": "scalarNonLSA", 'startDirection': 0.5}, 
+                      "type": "scalarNonLSA", 'startDirection': 0.5, "minimalAcceptedChange": 0.01},
                       "Linac3 ITF.DHZ03":
                     {"name": "ITF.DHZ03/REF.PULSE.REF#VALUE",
-                      "type": "scalarNonLSA", 'startDirection': 0.5}, 
+                      "type": "scalarNonLSA", 'startDirection': 0.5, "minimalAcceptedChange": 0.01},
                       "Linac3 ITF.DHZ04":
                     {"name": "ITF.DHZ04/REF.PULSE.REF#VALUE",
-                      "type": "scalarNonLSA", 'startDirection': 0.5}, 
+                      "type": "scalarNonLSA", 'startDirection': 0.5, "minimalAcceptedChange": 0.01},
                      "Linac3 Tank2 amp":
                     {"name": "IA2.RF/SettiPPMProperty#ref_amplit",
-                      "type": "scalarNonLSA", 'startDirection': 1e-3}, 
+                      "type": "scalarNonLSA", 'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                       "Linac3 Tank2 phase":
                     {"name": "IA2.RF/SettiPPMProperty#ref_phase",
-                      "type": "scalarNonLSA", 'startDirection': 1e-3}, 
+                      "type": "scalarNonLSA", 'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                      "Linac3 RC EndPhase":
                     {"name": "LRFSC.ramping/SetPointsSimple#spEndPhase",
-                      "type": "scalarNonLSA", 'startDirection': 1e-3},
+                      "type": "scalarNonLSA", 'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                      "Linac3 RC StartPhase":
                     {"name": "LRFSC.ramping/SetPointsSimple#spStartPhase",
-                      "type": "scalarNonLSA", 'startDirection': 1e-3},
+                      "type": "scalarNonLSA", 'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                       "Linac3 DB EndPhase":
                     {"name": "LRFSC.debunch/SetPointsSimple#spEndPhase",
-                      "type": "scalarNonLSA", 'startDirection': 1e-3}, 
+                      "type": "scalarNonLSA", 'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                       "Linac3 DB StartPhase":
                     {"name": "LRFSC.debunch/SetPointsSimple#spStartPhase",
-                      "type": "scalarNonLSA", 'startDirection': 1e-3}, 
+                      "type": "scalarNonLSA", 'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                      
                       "Linac3 Tank3 amp":
                     {"name": "IA3.RF/SettiPPMProperty#ref_amplit",
-                      "type": "scalarNonLSA", 'startDirection': 1e-3}, 
+                      "type": "scalarNonLSA", 'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
 
                       "Linac3 Tank3 phase":
                     {"name": "IA3.RF/SettiPPMProperty#ref_phase",
-                      "type": "scalarNonLSA", 'startDirection': 1e-3}, 
+                      "type": "scalarNonLSA", 'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                     "Linac3 RC StartAmplitude":
                     {"name": "LRFSC.ramping/SetPointsSimple#spStartAmplitude",
-                      "type": "scalarNonLSA", 'startDirection': 1e-3}, 
+                      "type": "scalarNonLSA", 'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                      "Linac3 RC EndAmplitude":
                     {"name": "LRFSC.ramping/SetPointsSimple#spEndAmplitude",
-                      "type": "scalarNonLSA", 'startDirection': 1e-3}, 
+                      "type": "scalarNonLSA", 'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
 
                     "Linac3 DB StartAmplitude":
                     {"name": "LRFSC.debunch/SetPointsSimple#spStartAmplitude",
-                      "type": "scalarNonLSA", 'startDirection': 1e-3}, 
+                      "type": "scalarNonLSA", 'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                      "Linac3 DB EndAmplitude":
                     {"name": "LRFSC.debunch/SetPointsSimple#spEndAmplitude",
-                      "type": "scalarNonLSA", 'startDirection': 1e-3},  
+                      "type": "scalarNonLSA", 'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                     
                     "EI.BVN10/K":
                      {"name": "rmi://virtual_sps/logical.EI.BVN10/K",
-                      "type": "scalar", 'startDirection': 5e-4},
+                      "type": "scalar", 'startDirection': 5e-4, "minimalAcceptedChange": 0.01},
                      "EI.BVN20/K":
                          {"name": "rmi://virtual_sps/logical.EI.BVN20/K",
-                          "type": "scalar", 'startDirection': 5e-4},
+                          "type": "scalar", 'startDirection': 5e-4, "minimalAcceptedChange": 0.01},
                      "EI.BHN10/K":
                          {"name": "rmi://virtual_sps/logical.EI.BHN10/K",
-                          "type": "scalar", 'startDirection': 1e-3},
+                          "type": "scalar", 'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                      "ETL.BHN20-INJ/K":
                          {"name": "rmi://virtual_sps/logical.ETL.BHN20-INJ/K",
-                          "type": "scalar", 'startDirection': 1e-3},
+                          "type": "scalar", 'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                          "ITH.DHZ10/K":
                              {"name": "rmi://virtual_sps/logical.ITH.DHZ10/K",
-                              "type": "scalar", 'startDirection': 1e-4},
+                              "type": "scalar", 'startDirection': 1e-4, "minimalAcceptedChange": 0.01},
                          "ITH.DHZ11/K":
                              {"name": "rmi://virtual_sps/logical.ITH.DHZ11/K",
-                              "type": "scalar", 'startDirection': 1e-4},
+                              "type": "scalar", 'startDirection': 1e-4, "minimalAcceptedChange": 0.01},
                          "ITH.DHZ21/K":
                              {"name": "rmi://virtual_sps/logical.ITH.DHZ21/K",
-                              "type": "scalar", 'startDirection': 1e-4},
+                              "type": "scalar", 'startDirection': 1e-4, "minimalAcceptedChange": 0.01},
 #                         "ITE.BHN10/K":
 #                             {"name": "rmi://virtual_sps/logical.ITE.BHN10/K",
 #                              "type": "scalar"},
@@ -110,63 +110,63 @@ class ListSelector():
 #                          "type": "scalar"},
                          "ETL.GSBHN10/KICK":
                              {"name": "rmi://virtual_leir/ETL.GSBHN10/KICK",
-                             "type": "function", "time": [110, 660], 'startDirection': 1e-3},
+                             "type": "function", "time": [110, 660], 'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                           "LEIRBEAM/injectionBump_CTRS10_H_1mm":
                              {"name": "rmi://virtual_leir/LEIRBEAM/injectionBump_CTRS10_H_1mm",
                               "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
-                              'startDirection': 1e-3},
+                              'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                           "LEIRBEAM/injectionBump_CTRS10_H_1mrad":
                              {"name": "rmi://virtual_leir/LEIRBEAM/injectionBump_CTRS10_H_1mrad",
                               "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
-                              'startDirection': 1e-3},
+                              'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                           "LEIRBEAM/injectionBump_CTRS10_V_1mm":
                              {"name": "rmi://virtual_leir/LEIRBEAM/injectionBump_CTRS10_V_1mm",
                               "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
-                              'startDirection': 1e-3},
+                              'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                            "LEIRBEAM/injectionBump_CTRS10_V_1mrad":
                              {"name": "rmi://virtual_leir/LEIRBEAM/injectionBump_CTRS10_V_1mrad",
                               "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
-                              'startDirection': 1e-3},
+                              'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                            "LEIRBEAM/coolerBump_CTRS20_H_1mm":
                              {"name": "rmi://virtual_leir/LEIRBEAM/coolerBump_CTRS20_H_1mm",
                               "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
-                              'startDirection': 1e-3},
+                              'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                             "LEIRBEAM/coolerBump_CTRS20_H_1mrad":
                              {"name": "rmi://virtual_leir/LEIRBEAM/coolerBump_CTRS20_H_1mrad",
                               "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
-                              'startDirection': 1e-3},
+                              'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                             "LEIRBEAM/coolerBump_CTRS20_V_1mm":
                              {"name": "rmi://virtual_leir/LEIRBEAM/coolerBump_CTRS20_V_1mm",
                               "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
-                              'startDirection': 1e-3},
+                              'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                              "LEIRBEAM/coolerBump_CTRS20_V_1mrad":
                              {"name": "rmi://virtual_leir/LEIRBEAM/coolerBump_CTRS20_V_1mrad",
                               "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
-                              'startDirection': 1e-3},
+                              'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                              "LEIRBEAM/extractionRegionSteering_CTRS40_H_1mm":
                              {"name": "rmi://virtual_leir/LEIRBEAM/extractionRegionSteering_CTRS40_H_1mm",
                               "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
-                              'startDirection': 1e-3},
+                              'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                              "LEIRBEAM/extractionRegionSteering_CTRS40_H_1mrad":
                              {"name": "rmi://virtual_leir/LEIRBEAM/extractionRegionSteering_CTRS40_H_1mrad",
                               "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
-                              'startDirection': 1e-3},
+                              'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                              "LEIRBEAM/extractionRegionSteering_CTRS40_V_1mm":
                              {"name": "rmi://virtual_leir/LEIRBEAM/extractionRegionSteering_CTRS40_V_1mm",
                               "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
-                              'startDirection': 1e-3},
+                              'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                              "LEIRBEAM/extractionRegionSteering_CTRS40_V_1mrad":
                              {"name": "rmi://virtual_leir/LEIRBEAM/extractionRegionSteering_CTRS40_V_1mrad",
                               "type": "functionSquare", "time": [200, 1850], "delta": 100., "range": [100,1950],
-                              'startDirection': 1e-3},
+                              'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                               "ER.GSECVGUN/Setting#amplitudesPoint1":
                              {"name": "rmi://virtual_leir/ER.GSECVGUN/Setting#amplitudes",
                              "type": "functionList", "time": [200, 900],
-                              'startDirection': 1e-3},
+                              'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
                              "ER.GSECVGUN/Setting#amplitudesPoint2":
                              {"name": "rmi://virtual_leir/ER.GSECVGUN/Setting#amplitudes",
                              "type": "functionList", "time": [2170, 2180],
-                              'startDirection': 1e-3},
+                              'startDirection': 1e-3, "minimalAcceptedChange": 0.01},
 #                              "EA.FGFREVCOR/Settings#amplitudes":
 #                             {"name": "rmi://inca_leir/EA.FGFREVCOR/Settings#amplitudes",
 #                             "type": "function", "time": [0, 60]}
@@ -192,6 +192,9 @@ class ListSelector():
         self.parameterList[key]["time"] = values
                           
     def setItemStartDirection(self, key, value):
-        self.parameterList[key]["startDirection"] = value                      
+        self.parameterList[key]["startDirection"] = value
+
+    def setItemMinimalAcceptedChange(self, key, value):
+        self.parameterList[key]["minimalAcceptedChange"] = value
         
         
