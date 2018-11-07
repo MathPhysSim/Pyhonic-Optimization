@@ -14,20 +14,24 @@ import ListSelectorClass as lsclass
 
 
 japc = pyjapc.PyJapc(incaAcceleratorName="LEIR", noSet=False)
-japc.setSelector("LEI.USER.EARLY")
+japc.setSelector("LEI.USER.NOMINAL")
 
-japc.rbacLogin()
+# japc.rbacLogin()
 
 parameterClass = pc.ParameterClass(japc)
 
 
 ls = lsclass.ListSelector()
-ls.setSelection([
-                 "ITH.DHZ10/K"])
+ls.setSelection(["ETL.GSBHN10/KICK"])
 
 parameterClass.addParameters(ls.getSelectedItemsDict())
 print("Current Value")
 print(parameterClass.getValues())
 setValue = parameterClass.getValues()
-parameterClass.setNewValues(setValue)
+print(setValue)
+print("Set Value")
+parameterClass.setNewValues([.1])
+print(parameterClass.getValues())
+print("Set Value back")
+parameterClass.setNewValues([0])
 print(parameterClass.getValues())

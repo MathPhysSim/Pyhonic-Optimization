@@ -71,13 +71,16 @@ class parameterObject():
         self.parameterStartDirection = parameterNameDict['startDirection']
 #        print("parameterObject")
         if self.parameterType == 'function':
-            self.object = constFunctionClass(japcIn, self.parameterName,
+            self.object = delta_function(japcIn, self.parameterName,
                                              parameterNameDict['time'])
         elif self.parameterType == 'functionSquare':
-            self.object = squareFunctionClass(japcIn, self.parameterName,
-                                              parameterNameDict['time'],
-                                              parameterNameDict['delta'],
-                                              parameterNameDict['range'])
+            self.object = delta_function(japcIn, self.parameterName,
+                                             parameterNameDict['time'])
+        # elif self.parameterType == 'functionSquare':
+        #     self.object = squareFunctionClass(japcIn, self.parameterName,
+        #                                       parameterNameDict['time'],
+        #                                       parameterNameDict['delta'],
+        #                                       parameterNameDict['range'])
         elif self.parameterType == 'functionList':
             self.object = constFunctionListClass(japcIn, self.parameterName,
                                               parameterNameDict['time'])
@@ -140,8 +143,6 @@ class constFunctionListClass():
             print(e.stacktrace())
 
 class constFunctionClass():
-#    t1 = 200
-#    t2 = 1850
     
     def __init__(self, japcIn, elementName, t):
 #        print("constantFunctionClassHIHI")
@@ -164,7 +165,6 @@ class constFunctionClass():
 
     
     def setValue(self, setValue):
-#        print("set here xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
         app = self.japc.getParam(self.elementName,
                                  noPyConversion=True).getValue()
         time = app.getDiscreteFunction().xArray
@@ -177,6 +177,49 @@ class constFunctionClass():
                                dimcheck=True)
         except Exception as e:
             print(e.stacktrace())
+
+class delta_function():
+
+    def __init__(self, japcIn, elementName, t):
+        self.japc = japcIn
+        self.elementName = elementName
+        self.t = t
+        self.initial_array = self.get_initial_array()
+        self.current_off_set = 0
+
+    def get_initial_array(self):
+        app = self.japc.getParam(self.elementName,
+                                 noPyConversion=True).getValue()
+        time = np.array(app.getDiscreteFunction().xArray)
+        Qtrim = np.array(app.getDiscreteFunction().yArray)
+        Qtrim = Qtrim[np.where((np.array(time) >= self.t[0]) &
+                       (np.array(time) <= self.t[1]))]
+        return Qtrim
+
+
+    def setValue(self, set_value):
+        self.current_off_set = set_value
+        self.setValues(self.initial_array + self.current_off_set)
+
+    def getValue(self):
+        return self.current_off_set
+
+    def setValues(self, set_array):
+        app = self.japc.getParam(self.elementName,
+                                 noPyConversion=True).getValue()
+        time = app.getDiscreteFunction().xArray
+        Qtrim = np.array(app.getDiscreteFunction().yArray)
+        Qtrim[np.where((np.array(time) >= self.t[0]) &
+                       (np.array(time) <= self.t[1]))] = set_array
+        app.getDiscreteFunction().yArray = Qtrim
+        try:
+            self.japc.setParam(self.elementName, app,
+                               dimcheck=True)
+        except Exception as e:
+            print(e.stacktrace())
+
+
+
 
 
 class scalarClass():

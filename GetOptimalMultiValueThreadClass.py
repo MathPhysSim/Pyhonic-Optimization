@@ -79,6 +79,7 @@ class getOptimalMultiValueThread(QThread):
         self.signals.setSubscribtion.emit(True)
         x0 = self.startValues
 #        print(self.parameterClass.getStartDirection())
+        # DOTO: add linear search
         if self.algorithmSelection == 'Powell':
             res = optimize.fmin_powell(self.set_function, x0, xtol=self.xTol,
                                        ftol=self.fTol,
@@ -118,19 +119,20 @@ class getOptimalMultiValueThread(QThread):
 
     def set_function(self, x):
         print(self.parameterEvolution)
-        if self.nrCalls>0:
+        if self.nrCalls>1:
             previous_change = self.parameterEvolution.iloc[:-2, self.nrCalls]
             current_change = x-self.parameterEvolution.iloc[:-2,0]
             small_change = (abs(current_change- previous_change)<self.minimalAcceptedChangeVector).all()
         else:
             small_change = False
-
+        # small_change = False
         if (small_change):
-            print('in case')
+            print(10*'in case')
             dataFinal = (-1)*self.parameterEvolution.iloc[-2, self.nrCalls]
             intensity = self.parameterEvolution.iloc[-2, self.nrCalls]
             error = self.parameterEvolution.iloc[-1, self.nrCalls]
             self.update_graphics(x - self.parameterEvolution.iloc[:-2, 0])
+            time.sleep(.1)
         else:
 
             self.signals.setValues.emit(x.tolist())
@@ -150,6 +152,5 @@ class getOptimalMultiValueThread(QThread):
 
         self.nrCalls += 1
         self.updateData(x-self.parameterEvolution.iloc[:-2, 0], intensity, error)
-
         self.signals.drawNow.emit()
         return dataFinal
