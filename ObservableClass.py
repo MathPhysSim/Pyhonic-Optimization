@@ -37,6 +37,7 @@ class ObservableClass():
             normVal = self.japc.getParam("EI.BCT10/Acquisition#chargesLinacSingle")
             if normVal > 0.15:
                 x = (x/normVal)
+
         self.valueList.append(x)
 
         if len(self.valueList) >= self.dataLength:

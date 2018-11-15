@@ -12,8 +12,8 @@ import numpy as np
 import pandas as pd
 import os
 
-class CommuticatorSignals(QObject):
 
+class CommuticatorSignals(QObject):
     drawNow = pyqtSignal()
     jobFinished = pyqtSignal()
     setValues = pyqtSignal(list)
@@ -24,7 +24,7 @@ class CommuticatorSignals(QObject):
 class getOptimalMultiValueThread(QThread):
 
     def __init__(self, parameterClass, observableParameter, algorithmSelection,
-                 xTol, fTol):
+                 xTol, fTol, interval_bound):
 
         QThread.__init__(self)
 
@@ -36,99 +36,79 @@ class getOptimalMultiValueThread(QThread):
         self.cancelFlag = False
         self.signals = CommuticatorSignals()
         self.nrCalls = 0
-        self.startValues = np.array(self.parameterClass.getStartVector())
+        self.start_values = np.array(self.parameterClass.getStartVector())
         self.minimalAcceptedChangeVector = np.array(self.parameterClass.getMinimalAcceptedChangeVector())
         self.data_storage_frame = pd.DataFrame()
         self.data_frame_graphics = pd.DataFrame()
 
         self.xTol = xTol
         self.fTol = fTol
-#        print(self.fTol)
+        self.interval_bound = interval_bound
+        #        print(self.fTol)
         self.algorithmSelection = algorithmSelection
         self.data_max = pd.DataFrame()
-# Methods...
-        self.updateData(self.startValues, np.nan, np.nan)
+        # Methods...
+        self.updateData(self.start_values, np.nan, np.nan)
 
     def updateData(self, x, intensityValue, errorValue):
         # print(x)
         self.parameterEvolution[self.nrCalls] = np.nan
         self.parameterEvolution.iloc[:-2,
-                                     self.nrCalls] = np.array(x).flatten()
+        self.nrCalls] = np.array(x).flatten()
         self.parameterEvolution.iloc[-2:,
-                                     self.nrCalls] = [intensityValue,
-                                                      errorValue]
+        self.nrCalls] = [intensityValue,
+                         errorValue]
         print(self.parameterEvolution)
         observables_list = self.ob.valueListBuffer
-        observables_list = np.array(observables_list)*(-1)
-        self.data_storage_frame =\
+        observables_list = np.array(observables_list) * (-1)
+        self.data_storage_frame = \
             self.data_storage_frame.append(pd.DataFrame(observables_list,
-                                           columns=[self.nrCalls]).T)
+                                                        columns=[self.nrCalls]).T)
 
     def save(self, name):
         save_path = 'saved_data/'
-        name = save_path+name
+        name = save_path + name
         if not os.path.exists(save_path):
             os.makedirs(save_path)
         pd.concat([self.parameterEvolution.iloc[:-2, :].T,
-                  self.data_storage_frame], axis=1).to_csv(name)
+                   self.data_storage_frame], axis=1).to_csv(name)
 
     def __del__(self):
         self.wait()
-
-    def run(self):
-        self.signals.setSubscribtion.emit(True)
-        x0 = self.startValues
-#        print(self.parameterClass.getStartDirection())
-        # DOTO: add linear search
-        if self.algorithmSelection == 'Powell':
-            res = optimize.fmin_powell(self.set_function, x0, xtol=self.xTol,
-                                       ftol=self.fTol,
-                                       direc=self.parameterClass.
-                                       getStartDirection())
-            if (len(res.shape) < 0) | (type(res) == float):
-                res = np.array([res])
-#            returnValue = res
-        else:
-            res = optimize.minimize(self.set_function, x0, method='Nelder-Mead',
-                                    options={'xatol': self.xTol,
-                                             'fatol': self.fTol})
-#            returnValue = res.x
-#        self.signals.setValues.emit(returnValue.tolist())
-        self.signals.jobFinished.emit()
-        self.signals.setSubscribtion.emit(False)
 
     def update_graphics(self, x):
         "updates graphics and max value"
         self.data_frame_graphics = self.parameterEvolution.copy()
         self.data_frame_graphics[self.nrCalls + 1] = np.nan
-        self.data_frame_graphics.iloc[:-2, self.nrCalls + 1]\
+        self.data_frame_graphics.iloc[:-2, self.nrCalls + 1] \
             = np.array(x).flatten()
         intensityValues = self.ob.valueList
-        values = [(-1)*np.mean(intensityValues),
+        values = [(-1) * np.mean(intensityValues),
                   np.std(intensityValues) /
                   np.sqrt(len(intensityValues))]
-        self.data_frame_graphics.iloc[-2:, self.nrCalls + 1] =\
+        self.data_frame_graphics.iloc[-2:, self.nrCalls + 1] = \
             np.array(values).flatten()
         max_idx = self.data_frame_graphics.iloc[-2, :].idxmax()
-        if not(np.isnan(max_idx)):
+        if not (np.isnan(max_idx)):
             self.data_max = self.data_frame_graphics.iloc[:, max_idx]
             self.signals.setMaximum.emit((self.data_max.iloc[:-2]
-                                         + self.parameterEvolution.
-                                         iloc[:-2, 0]).tolist())
+                                          + self.parameterEvolution.
+                                          iloc[:-2, 0]).tolist())
         self.signals.drawNow.emit()
 
     def set_function(self, x):
+        print(type(x))
         print(self.parameterEvolution)
-        if self.nrCalls>1:
+        if self.nrCalls > 1:
             previous_change = self.parameterEvolution.iloc[:-2, self.nrCalls]
-            current_change = x-self.parameterEvolution.iloc[:-2,0]
-            small_change = (abs(current_change- previous_change)<self.minimalAcceptedChangeVector).all()
+            current_change = x - self.parameterEvolution.iloc[:-2, 0]
+            small_change = (abs(current_change - previous_change) < self.minimalAcceptedChangeVector).all()
         else:
             small_change = False
         # small_change = False
         if (small_change):
-            print(10*'in case')
-            dataFinal = (-1)*self.parameterEvolution.iloc[-2, self.nrCalls]
+            print(10 * 'in case')
+            dataFinal = (-1) * self.parameterEvolution.iloc[-2, self.nrCalls]
             intensity = self.parameterEvolution.iloc[-2, self.nrCalls]
             error = self.parameterEvolution.iloc[-1, self.nrCalls]
             self.update_graphics(x - self.parameterEvolution.iloc[:-2, 0])
@@ -137,12 +117,12 @@ class getOptimalMultiValueThread(QThread):
 
             self.signals.setValues.emit(x.tolist())
             self.ob.reset()
-            while(self.ob.dataWait):
+            while (self.ob.dataWait):
                 if self.cancelFlag:
                     self.signals.setSubscribtion.emit(False)
                     # TODO : check saving in this case
                     self.terminate()
-                self.update_graphics(x-self.parameterEvolution.iloc[:-2, 0])
+                self.update_graphics(x - self.parameterEvolution.iloc[:-2, 0])
                 time.sleep(2)
 
             self.ob.dataWait = True
@@ -151,6 +131,43 @@ class getOptimalMultiValueThread(QThread):
             error = self.ob.dataErrorOut
 
         self.nrCalls += 1
-        self.updateData(x-self.parameterEvolution.iloc[:-2, 0], intensity, error)
+        self.updateData(x - self.parameterEvolution.iloc[:-2, 0], intensity, error)
         self.signals.drawNow.emit()
+        print(dataFinal)
         return dataFinal
+
+    def wrapper_fun(self, x):
+        x = np.asarray([x])
+        return self.set_function(x)
+
+    def run(self):
+        self.signals.setSubscribtion.emit(True)
+        start_values = self.start_values
+        print(start_values.shape[0])
+
+        # print(self.parameterClass.getStartDirection())
+        # DOTO: add linear search
+        if self.algorithmSelection == 'Powell':
+            bounds_delta = self.interval_bound
+            bounds = [start_values[0] - bounds_delta, start_values[0] + bounds_delta]
+            if start_values.shape[0] == 1:
+                print('Use fminbound')
+                res = optimize.fminbound(self.wrapper_fun, bounds[0], bounds[1], xtol=self.xTol)
+
+            else:
+                print('Use Powell')
+                res = optimize.fmin_powell(self.set_function, start_values, xtol=self.xTol,
+                                           ftol=self.fTol,
+                                           direc=self.parameterClass.
+                                           getStartDirection())
+                if (len(res.shape) < 0) | (type(res) == float):
+                    res = np.array([res])
+        #            returnValue = res
+        else:
+            res = optimize.minimize(self.set_function, start_values, method='Nelder-Mead',
+                                    options={'xatol': self.xTol,
+                                             'fatol': self.fTol})
+        #            returnValue = res.x
+        #        self.signals.setValues.emit(returnValue.tolist())
+        self.signals.jobFinished.emit()
+        self.signals.setSubscribtion.emit(False)

@@ -50,7 +50,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
                 self.doubleSpinBoxEndTimeChanged)
         self.doubleSpinBoxStartDirection.valueChanged.connect(
                 self.doubleSpinBoxStartDirectionChanged)
-
+        self.doubleSpinBoxIntervalBounds.valueChanged.connect(self.doubleSpinBoxIntervalBoundsChanged)
         self.doubleSpinBoxObservableStartTime.valueChanged.connect(
                 self.doubleSpinBoxObservableStartTimeChanged)
         self.doubleSpinBoxObservableEndTime.valueChanged.connect(
@@ -71,12 +71,14 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.min_accepted_change = []
         self.x0 = []
         self.max_value = []
+        self.interval_bound = 0.0
         self.selectedElement = []
         self.observableTime = np.array([0, 0])
 
         self.spinBoxXTolValue.setValue(self.xTol)
         self.spinBoxFTolValue.setValue(self.fTol)
         self.spinBoxAverageNr.setValue(self.averageNrValue)
+        self.doubleSpinBoxIntervalBounds.setValue(self.interval_bound)
         
         self.buttonGroup.buttonClicked.connect(self.buttonGroupSelected)
         self.algorithmSelection = self.buttonGroup.checkedButton().text()
@@ -188,7 +190,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
     def doubleSpinBoxObservableEndTimeChanged(self):
         self.ob.timeInterval[1] = self.doubleSpinBoxObservableEndTime.value()
 
-
+    def doubleSpinBoxIntervalBoundsChanged(self):
+        self.interval_bound = self.doubleSpinBoxIntervalBounds.value()
 
 
     def buttonGroupSelected(self, id):
@@ -242,7 +245,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
 #            print("pass3")
             self.getOptimalValueThread = gOVThread.getOptimalMultiValueThread(
                     self.parameterClass, self.ob, self.algorithmSelection,
-                    self.xTol, self.fTol)
+                    self.xTol, self.fTol, self.interval_bound)
 #            print("pass4")
             self.getOptimalValueThread.signals.setSubscribtion.connect(
                     self.setSubscribtion)
