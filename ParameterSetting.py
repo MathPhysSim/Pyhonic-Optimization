@@ -37,10 +37,13 @@ class ParameterClass():
         startVec = []
         for key in self.memberParameters:
             startVec.append(self.memberParameters[key].parameterStartDirection)
-#        print(10*'test')
-#        print(np.diag(startVec))
-#        print(10*'test')
         return np.diag(startVec)
+
+    def getBounds(self):
+        bounds = []
+        for key in self.memberParameters:
+            bounds.append(self.memberParameters[key].bounds)
+        return bounds
 
     def setNewValues(self, x):
         x = np.array(x)
@@ -61,21 +64,23 @@ class ParameterClass():
         return [key for key in self.memberParameters]
 
 
+
 class parameterObject():
 
-    def __init__(self, japcIn, parameterNameDict):
+    def __init__(self, japcIn, parameter_name_dict_entry):
 
         self.japc = japcIn
-        self.parameterName = parameterNameDict['name']
-        self.parameterType = parameterNameDict['type']
-        self.parameterStartDirection = parameterNameDict['startDirection']
-#        print("parameterObject")
+        self.parameterName = parameter_name_dict_entry['name']
+        self.parameterType = parameter_name_dict_entry['type']
+        self.parameterStartDirection = parameter_name_dict_entry['startDirection']
+        self.bounds = parameter_name_dict_entry['bounds']
+
         if self.parameterType == 'function':
             self.object = delta_function(japcIn, self.parameterName,
-                                             parameterNameDict['time'])
+                                         parameter_name_dict_entry['time'])
         elif self.parameterType == 'functionSquare':
             self.object = delta_function(japcIn, self.parameterName,
-                                             parameterNameDict['time'])
+                                         parameter_name_dict_entry['time'])
         # elif self.parameterType == 'functionSquare':
         #     self.object = squareFunctionClass(japcIn, self.parameterName,
         #                                       parameterNameDict['time'],
@@ -83,13 +88,13 @@ class parameterObject():
         #                                       parameterNameDict['range'])
         elif self.parameterType == 'functionList':
             self.object = constFunctionListClass(japcIn, self.parameterName,
-                                              parameterNameDict['time'])
+                                                 parameter_name_dict_entry['time'])
         elif self.parameterType == 'scalarNonLSA':
             self.object = scalarClassNonLsa(japcIn, self.parameterName)    
         else:
             self.object = scalarClass(japcIn, self.parameterName)
         self.x0 = self.getValue()
-        self.minimalAcceptedChange = parameterNameDict["minimalAcceptedChange"]
+        self.minimalAcceptedChange = parameter_name_dict_entry["minimalAcceptedChange"]
 
 
 

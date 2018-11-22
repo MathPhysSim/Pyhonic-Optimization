@@ -12,8 +12,7 @@ import ParameterSetting as pc
 
 import ListSelectorClass as lsclass
 
-
-japc = pyjapc.PyJapc(incaAcceleratorName="LEIR", noSet=False)
+japc = pyjapc.PyJapc(incaAcceleratorName="LEIR", noSet=True)
 japc.setSelector("LEI.USER.NOMINAL")
 
 # japc.rbacLogin()
@@ -22,16 +21,20 @@ parameterClass = pc.ParameterClass(japc)
 
 
 ls = lsclass.ListSelector()
-ls.setSelection(["ETL.GSBHN10/KICK"])
+ls.setSelection(["ETL.GSBHN10/KICK", "Linac3 RC StartPhase"])
 
 parameterClass.addParameters(ls.getSelectedItemsDict())
+
+
 print("Current Value")
+
 print(parameterClass.getValues())
 setValue = parameterClass.getValues()
+
 print(setValue)
 print("Set Value")
-parameterClass.setNewValues([.1])
-print(parameterClass.getValues())
-print("Set Value back")
-parameterClass.setNewValues([0])
-print(parameterClass.getValues())
+# parameterClass.setNewValues([.1])
+# print(parameterClass.getValues())
+# print("Set Value back")
+# parameterClass.setNewValues([0])
+# print(parameterClass.getValues())

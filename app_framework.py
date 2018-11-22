@@ -14,7 +14,7 @@ from sceleton import Ui_MainWindow
 
 class MyApp(QMainWindow, Ui_MainWindow):
 
-    japc = pyjapc.PyJapc(incaAcceleratorName="LEIR", noSet=False)
+    japc = pyjapc.PyJapc(incaAcceleratorName="LEIR", noSet=True)
     
     # japc.rbacLogin()
     averageNrValue = 1.
@@ -29,6 +29,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
         self.imageLabel.setPixmap(QPixmap("Powell.png"))
         self.imageLabel.setScaledContents(True)
+
+        self.listSelector = lsclass.ListSelector()
 
         self.runOptimizationButton.clicked.connect(self.runOptimization)
         self.runOptimizationButton.setEnabled(False)
@@ -50,7 +52,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
                 self.doubleSpinBoxEndTimeChanged)
         self.doubleSpinBoxStartDirection.valueChanged.connect(
                 self.doubleSpinBoxStartDirectionChanged)
-        self.doubleSpinBoxIntervalBounds.valueChanged.connect(self.doubleSpinBoxIntervalBoundsChanged)
+        self.doubleSpinBoxIntervalBounds.valueChanged.connect(
+            self.doubleSpinBoxIntervalBoundsChanged)
         self.doubleSpinBoxObservableStartTime.valueChanged.connect(
                 self.doubleSpinBoxObservableStartTimeChanged)
         self.doubleSpinBoxObservableEndTime.valueChanged.connect(
@@ -66,8 +69,8 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
 
 #        self.visualizeData()
-        self.xTol = 0.01
-        self.fTol = 0.01
+        self.xTol = 0.000001
+        self.fTol = 0.000001
         self.min_accepted_change = []
         self.x0 = []
         self.max_value = []
@@ -88,7 +91,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.observableMethodSelection = self.buttonGroupObservable.\
         checkedButton().text()
         
-        self.listSelector = lsclass.ListSelector()
+
 
         for itemName in self.listSelector.getItems():
             item = QListWidgetItem(itemName)
@@ -153,6 +156,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         else:
             self.doubleSpinBoxStartTime.setEnabled(False)
             self.doubleSpinBoxEndTime.setEnabled(False)
+        self.doubleSpinBoxIntervalBounds.setValue(float(selectedEntry["bounds"][1]))
             
   
 
@@ -175,8 +179,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
     def doubleSpinBoxStartDirectionChanged(self):
         self.listSelector.setItemStartDirection(self.selectedElement,
                                        self.doubleSpinBoxStartDirection.value())
-        self.listSelector.setItemMinimalAcceptedChange(self.selectedElement,
-                                       self.doubleSpinBoxStartDirection.value()/25)
+        # if (self.selectedElement['minimalAcceptedChange'] == [0, 0]):
+        #     self.listSelector.setItemMinimalAcceptedChange(self.selectedElement,
+        #                                                    self.doubleSpinBoxStartDirection.value()/25)
 
     def doubleSpinBoxMinimalAcceptedChangeChanged(self):
         self.listSelector.setItemMinimalAcceptedChange(self.selectedElement,
@@ -191,7 +196,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.ob.timeInterval[1] = self.doubleSpinBoxObservableEndTime.value()
 
     def doubleSpinBoxIntervalBoundsChanged(self):
-        self.interval_bound = self.doubleSpinBoxIntervalBounds.value()
+        # self.interval_bound = self.doubleSpinBoxIntervalBounds.value()
+        # print(self.listSelector)
+        self.listSelector.setBoundaries(self.selectedElement, self.doubleSpinBoxIntervalBounds.value())
 
 
     def buttonGroupSelected(self, id):
@@ -233,20 +240,13 @@ class MyApp(QMainWindow, Ui_MainWindow):
     def runOptimization(self):
         if self.runOptimizationButton.text() == "Start":
             self.listWidgetCycle.setEnabled(False)
-#            print("pass0")
             self.parameterClass.resetParameters()
-#            print("pass1")
-#            print(self.listSelector.getSelectedItemsDict())
-#            print("pass1x")
             self.parameterClass.addParameters(
                     self.listSelector.getSelectedItemsDict())
-#            print("pass2")
             self.x0 = self.parameterClass.getStartVector()
-#            print("pass3")
             self.getOptimalValueThread = gOVThread.getOptimalMultiValueThread(
                     self.parameterClass, self.ob, self.algorithmSelection,
                     self.xTol, self.fTol, self.interval_bound)
-#            print("pass4")
             self.getOptimalValueThread.signals.setSubscribtion.connect(
                     self.setSubscribtion)
             self.getOptimalValueThread.signals.setValues.connect(
@@ -374,3 +374,4 @@ class MyApp(QMainWindow, Ui_MainWindow):
             event.accept()
         else:
             event.ignore()
+

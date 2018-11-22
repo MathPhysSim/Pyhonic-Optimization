@@ -38,6 +38,7 @@ class getOptimalMultiValueThread(QThread):
         self.nrCalls = 0
         self.start_values = np.array(self.parameterClass.getStartVector())
         self.minimalAcceptedChangeVector = np.array(self.parameterClass.getMinimalAcceptedChangeVector())
+        self.bounds = self.parameterClass.getBounds()
         self.data_storage_frame = pd.DataFrame()
         self.data_frame_graphics = pd.DataFrame()
 
@@ -114,7 +115,6 @@ class getOptimalMultiValueThread(QThread):
             self.update_graphics(x - self.parameterEvolution.iloc[:-2, 0])
             time.sleep(.1)
         else:
-
             self.signals.setValues.emit(x.tolist())
             self.ob.reset()
             while (self.ob.dataWait):
@@ -133,12 +133,27 @@ class getOptimalMultiValueThread(QThread):
         self.nrCalls += 1
         self.updateData(x - self.parameterEvolution.iloc[:-2, 0], intensity, error)
         self.signals.drawNow.emit()
-        print(dataFinal)
+
         return dataFinal
 
     def wrapper_fun(self, x):
         x = np.asarray([x])
         return self.set_function(x)
+
+    def taxi_cab(self, start_values):
+        current_values = start_values
+
+        def select_element_fun(x, nr_element):
+            current_values[nr_element] = x
+            return self.set_function(current_values)
+
+        for nr in range(len(current_values)):
+            bounds = np.array(self.bounds[nr])
+            bounds = bounds + start_values[nr]
+            print('bounds: ', bounds)
+            res = optimize.fminbound(lambda trim_lambda: (select_element_fun(trim_lambda, nr)),
+                                     bounds[0], bounds[1], xtol=self.xTol)
+
 
     def run(self):
         self.signals.setSubscribtion.emit(True)
@@ -153,6 +168,8 @@ class getOptimalMultiValueThread(QThread):
             if start_values.shape[0] == 1:
                 print('Use fminbound')
                 res = optimize.fminbound(self.wrapper_fun, bounds[0], bounds[1], xtol=self.xTol)
+            if True:
+                self.taxi_cab(start_values)
 
             else:
                 print('Use Powell')
