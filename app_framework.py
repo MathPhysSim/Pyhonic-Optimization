@@ -62,10 +62,13 @@ class MyApp(QMainWindow, Ui_MainWindow):
             self.doubleSpinBoxMinimalAcceptedChangeChanged)
         self.japc.setSelector("LEI.USER.MDEARLY")
         self.cycle = self.japc.getSelector()
-        self.japc.subscribeParam("ER.BCTDC/Acquisition#intensities",
-                                 self.onValueRecieved)
+        # TODO: For the intesity change back
+        # self.japc.subscribeParam("ER.BCTDC/Acquisition#intensities",
+        #                          self.onValueRecieved)
 
-        self.ob = ob.ObservableClass(self.japc, self.averageNrValue)
+        self.japc.subscribeParam("LEI.BQS.L/Acquisition",
+                                 self.onValueRecieved)
+        self.observable = ob.ObservableClass(self.japc, self.averageNrValue)
 
 
 #        self.visualizeData()
@@ -121,7 +124,10 @@ class MyApp(QMainWindow, Ui_MainWindow):
         
         self.japc.setSelector(id.text())
         self.japc.clearSubscriptions()
-        self.japc.subscribeParam("ER.BCTDC/Acquisition#intensities",
+        # TODO: For the intesity change back
+        # self.japc.subscribeParam("ER.BCTDC/Acquisition#intensities",
+        #                          self.onValueRecieved)
+        self.japc.subscribeParam("LEI.BQS.L/Acquisition",
                                  self.onValueRecieved)
         print("Set to:", self.japc.getSelector())
         self.cycle = self.japc.getSelector()
@@ -188,12 +194,12 @@ class MyApp(QMainWindow, Ui_MainWindow):
                                        self.doubleSpinBoxMinimalAcceptedChange.value())
 
     def doubleSpinBoxObservableStartTimeChanged(self):
-        self.ob.timeInterval[0] = self.doubleSpinBoxObservableStartTime.value()
+        self.observable.timeInterval[0] = self.doubleSpinBoxObservableStartTime.value()
         self.doubleSpinBoxObservableEndTime.\
-        setMinimum(self.ob.timeInterval[0]+1)
+        setMinimum(self.observable.timeInterval[0] + 1)
 
     def doubleSpinBoxObservableEndTimeChanged(self):
-        self.ob.timeInterval[1] = self.doubleSpinBoxObservableEndTime.value()
+        self.observable.timeInterval[1] = self.doubleSpinBoxObservableEndTime.value()
 
     def doubleSpinBoxIntervalBoundsChanged(self):
         # self.interval_bound = self.doubleSpinBoxIntervalBounds.value()
@@ -209,13 +215,13 @@ class MyApp(QMainWindow, Ui_MainWindow):
         if (self.observableMethodSelection == 'Area') |\
            (self.observableMethodSelection == 'Transmission'):
             self.doubleSpinBoxObservableEndTime.\
-                 setMinimum(self.ob.timeInterval[0] + 1)
+                 setMinimum(self.observable.timeInterval[0] + 1)
             self.doubleSpinBoxObservableStartTime.setEnabled(True)
             self.doubleSpinBoxObservableEndTime.setEnabled(True)
         else:
             self.doubleSpinBoxObservableStartTime.setEnabled(False)
             self.doubleSpinBoxObservableEndTime.setEnabled(False)
-        self.ob.method = id.text()
+        self.observable.method = id.text()
 
     def buttonRestoreOldValuesPressed(self):
         self.setValues(self.x0)
@@ -231,11 +237,10 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     def spinBoxAverageNrChanged(self):
         self.averageNrValue = self.spinBoxAverageNr.value()
-        self.ob.dataLength = self.averageNrValue
+        self.observable.dataLength = self.averageNrValue
 
     def onValueRecieved(self, parameterName, newValue):
-        self.ob.setValue(newValue)  # /normVal
-#        print('subscibtionRuns')
+        self.observable.setValue(newValue)
 
     def runOptimization(self):
         if self.runOptimizationButton.text() == "Start":
@@ -245,7 +250,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
                     self.listSelector.getSelectedItemsDict())
             self.x0 = self.parameterClass.getStartVector()
             self.getOptimalValueThread = gOVThread.getOptimalMultiValueThread(
-                    self.parameterClass, self.ob, self.algorithmSelection,
+                    self.parameterClass, self.observable, self.algorithmSelection,
                     self.xTol, self.fTol, self.interval_bound)
             self.getOptimalValueThread.signals.setSubscribtion.connect(
                     self.setSubscribtion)
@@ -330,7 +335,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         ax_left.set_ylabel('rel. change (%)')
 
         self.plotWidget.canvas.axs[0].set_title('Parameter evolution')
-        self.plotWidget.canvas.axs[1].set_title('Intensity')
+        self.plotWidget.canvas.axs[1].set_title('Observable')
 
         self.plotWidget.canvas.axs[1].set_xlabel('Nr of changes')
         self.plotWidget.canvas.axs[0].set_ylabel('parameters (a.u.)')

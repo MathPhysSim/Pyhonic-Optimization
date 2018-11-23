@@ -7,7 +7,7 @@ Created on Thu May 17 14:41:13 2018
 """
 
 import numpy as np
-
+import pandas as pd
 
 class ObservableClass():
 
@@ -21,24 +21,11 @@ class ObservableClass():
         self.dataLength = length
         self.method = 'Maximum'
         self.timeInterval = np.array([0, 0])
+        self.observableClass = ObservableClassSchottky(self.japc)
 
-    def setValue(self, inArray):
-        inArray = np.array(inArray[395:])*(-1)
-#        print(inArray)
-        if self.method == 'Maximum':
-            x = np.min(inArray)
-        elif self.method == 'Area':
-            x = np.mean(inArray[self.timeInterval[0]:self.timeInterval[1]])
-            # self.valueList.append(x)
-        elif self.method == 'Transmission':
-#            x = (inArray[self.timeInterval[1]]/inArray[self.timeInterval[0]])
-            x = (inArray[self.timeInterval[0]])
-#            x = (inArray[self.timeInterval[0]])
-            normVal = self.japc.getParam("EI.BCT10/Acquisition#chargesLinacSingle")
-            if normVal > 0.15:
-                x = (x/normVal)
-
-        self.valueList.append(x)
+    def setValue(self, data_acquisiton_in):
+        observable_value = self.observableClass.create_observable(data_acquisiton_in)
+        self.valueList.append(observable_value)
 
         if len(self.valueList) >= self.dataLength:
             cleanData = self.valueList
@@ -48,9 +35,104 @@ class ObservableClass():
             self.dataOut = np.median(cleanData)
             self.dataErrorOut = np.std(cleanData)/np.sqrt(len(cleanData))
             self.valueListBuffer = self.valueList
-            # print('inArray out')
             self.valueList = []
             self.dataWait = False
 
     def reset(self):
         self.valueList = []
+
+
+class ObservableClassSchottky():
+
+    def __init__(self, japcIn):
+        self.japc = japcIn
+        self.dataFrame = np.array([])
+        self.acquisition = self.japc.getParam("LEI.BQS.L/Acquisition")
+        self.settings = self.japc.getParam("LEI.BQS.L/Setting")
+        self.currentTimeVector = 0
+        self.deltapoverp = 0
+
+
+    def setData(self, value):
+        value = np.flipud(np.reshape(value, (self.acquisition['nWindows'], -1)))
+        timeVector = self.acquisition['windowMsStamp'][::-1]
+        self.currentTimeVector = timeVector
+        fVector = (np.arange(value.shape[-1]) * self.acquisition['df'] + \
+                   self.acquisition['spectralZoomStartFreqHz'])
+        f0 = 36.1e6
+        eta = -0.867
+        fact = -1 / eta
+        self.deltapoverp = (fVector - f0) / f0 * fact * 1e3
+        self.dataFrame = pd.DataFrame(value, index=timeVector, columns=self.deltapoverp)
+
+    def getData(self):
+        return self.dataFrame
+
+    def getStatistics(self, sliceNr):
+        outFrame = pd.DataFrame(index=['1.mom', '2.mom'])
+        df = self.dataFrame.iloc[sliceNr, :]
+        first_moment = (df / df.sum() * df.index.values).sum()
+        second_moment = np.sqrt((df / df.sum() * (df.index.values - first_moment) ** 2).sum())
+        outFrame[0] = [first_moment, second_moment]
+        return outFrame.T
+
+    def acquireData(self, value):
+        self.acquisition = value #self.japc.getParam("LEI.BQS.L/Acquisition")
+        self.setData(self.acquisition['spectralZoomDftPow'])
+
+    def updateSettings(self):
+        self.settings = self.japc.getParam("LEI.BQS.L/Setting")
+
+    def setSettings(self, myFields):
+        self.japc.setParam("LEI.BQS.L/Setting", myFields)
+        self.updateSettings()
+
+    def getSettings(self):
+        x = self.japc.getParam("LEI.BQS.L/Setting")
+        self.updateSettings()
+        return x
+
+    def get_observable(self):
+        # print(self.getStatistics(2))
+        return self.getStatistics(2)['2.mom']
+
+    def create_observable(self, in_data):
+        self.acquireData(in_data)
+        return (-1)*(self.get_observable())
+
+class ObservableClassIntensity:
+
+    def __init__(self, timeInterval, japc_in):
+
+        self.timeInterval = timeInterval
+        self.japc = japc_in
+        self.acquisition = None
+        self.intensity_values = np.array([])
+        self.observable_value = False
+
+    def acquireData(self, name, value):
+            self.acquisition = value
+
+    def set_observable(self, method):
+        self.observable_value = False
+        self.intensity_values = np.array(self.acquisition['intensities'][395:]) * (-1)
+        if method == 'Maximum':
+            observable_value = np.min(self.intensity_values)
+        elif method == 'Area':
+            observable_value = np.mean(self.intensity_values[self.timeInterval[0]:self.timeInterval[1]])
+            # self.valueList.append(observable_value)
+        elif method == 'Transmission':
+            #            observable_value = (in_array[self.timeInterval[1]]/in_array[self.timeInterval[0]])
+            observable_value = (self.intensity_values[self.timeInterval[0]])
+            #            observable_value = (in_array[self.timeInterval[0]])
+            normVal = self.japc.getParam("EI.BCT10/Acquisition#chargesLinacSingle")
+            if normVal > 0.15:
+                observable_value = (observable_value / normVal)
+        return observable_value
+
+    def create_observable(self, in_data):
+        self.acquireData(in_data)
+        return self.get_observable()
+
+    def get_observable(self, method):
+        return self.process_data(method)

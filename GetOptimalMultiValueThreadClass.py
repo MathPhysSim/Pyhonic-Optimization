@@ -153,15 +153,13 @@ class getOptimalMultiValueThread(QThread):
             print('bounds: ', bounds)
             res = optimize.fminbound(lambda trim_lambda: (select_element_fun(trim_lambda, nr)),
                                      bounds[0], bounds[1], xtol=self.xTol)
+            self.signals.drawNow.emit()
 
 
     def run(self):
         self.signals.setSubscribtion.emit(True)
         start_values = self.start_values
-        print(start_values.shape[0])
 
-        # print(self.parameterClass.getStartDirection())
-        # DOTO: add linear search
         if self.algorithmSelection == 'Powell':
             bounds_delta = self.interval_bound
             bounds = [start_values[0] - bounds_delta, start_values[0] + bounds_delta]
