@@ -28,7 +28,7 @@ class getOptimalMultiValueThread(QThread):
 
         QThread.__init__(self)
 
-        self.ob = observableParameter
+        self.observable = observableParameter
         self.parameterClass = parameterClass
         self.index = self.parameterClass.getNames()
         self.index.extend(["intensity", "error"])
@@ -60,7 +60,7 @@ class getOptimalMultiValueThread(QThread):
         self.nrCalls] = [intensityValue,
                          errorValue]
         print(self.parameterEvolution)
-        observables_list = self.ob.valueListBuffer
+        observables_list = self.observable.valueListBuffer
         observables_list = np.array(observables_list) * (-1)
         self.data_storage_frame = \
             self.data_storage_frame.append(pd.DataFrame(observables_list,
@@ -83,7 +83,7 @@ class getOptimalMultiValueThread(QThread):
         self.data_frame_graphics[self.nrCalls + 1] = np.nan
         self.data_frame_graphics.iloc[:-2, self.nrCalls + 1] \
             = np.array(x).flatten()
-        intensityValues = self.ob.valueList
+        intensityValues = self.observable.valueList
         values = [(-1) * np.mean(intensityValues),
                   np.std(intensityValues) /
                   np.sqrt(len(intensityValues))]
@@ -108,7 +108,7 @@ class getOptimalMultiValueThread(QThread):
             small_change = False
         # small_change = False
         if (small_change):
-            print(10 * 'in case')
+            # print(10 * 'in case')
             dataFinal = (-1) * self.parameterEvolution.iloc[-2, self.nrCalls]
             intensity = self.parameterEvolution.iloc[-2, self.nrCalls]
             error = self.parameterEvolution.iloc[-1, self.nrCalls]
@@ -116,8 +116,8 @@ class getOptimalMultiValueThread(QThread):
             time.sleep(.1)
         else:
             self.signals.setValues.emit(x.tolist())
-            self.ob.reset()
-            while (self.ob.dataWait):
+            self.observable.reset()
+            while (self.observable.dataWait):
                 if self.cancelFlag:
                     self.signals.setSubscribtion.emit(False)
                     # TODO : check saving in this case
@@ -125,10 +125,11 @@ class getOptimalMultiValueThread(QThread):
                 self.update_graphics(x - self.parameterEvolution.iloc[:-2, 0])
                 time.sleep(2)
 
-            self.ob.dataWait = True
-            dataFinal = self.ob.dataOut
-            intensity = (-1) * self.ob.dataOut
-            error = self.ob.dataErrorOut
+            self.observable.dataWait = True
+            dataFinal = self.observable.dataOut
+            #TODO: change back when change observable
+            intensity = self.observable.dataOut
+            error = self.observable.dataErrorOut
 
         self.nrCalls += 1
         self.updateData(x - self.parameterEvolution.iloc[:-2, 0], intensity, error)

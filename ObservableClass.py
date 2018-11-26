@@ -21,7 +21,9 @@ class ObservableClass():
         self.dataLength = length
         self.method = 'Maximum'
         self.timeInterval = np.array([0, 0])
-        self.observableClass = ObservableClassSchottky(self.japc)
+        # self.observableClass = ObservableClassSchottky(self.japc)
+
+        self.observableClass = ObservableClassIntensity(self.timeInterval, self.japc, self.method)
 
     def setValue(self, data_acquisiton_in):
         observable_value = self.observableClass.create_observable(data_acquisiton_in)
@@ -93,35 +95,37 @@ class ObservableClassSchottky():
         return x
 
     def get_observable(self):
-        # print(self.getStatistics(2))
-        return self.getStatistics(2)['2.mom']
+        processe_observable = (self.getStatistics(2)['2.mom'])**2+(self.getStatistics(2)['1.mom']-0.15)**2
+        return processe_observable
 
     def create_observable(self, in_data):
         self.acquireData(in_data)
-        return (-1)*(self.get_observable())
+        return (self.get_observable())
 
 class ObservableClassIntensity:
 
-    def __init__(self, timeInterval, japc_in):
+    def __init__(self, timeInterval, japc_in, method):
 
         self.timeInterval = timeInterval
         self.japc = japc_in
         self.acquisition = None
         self.intensity_values = np.array([])
         self.observable_value = False
+        self.method = method
+
 
     def acquireData(self, name, value):
             self.acquisition = value
 
-    def set_observable(self, method):
+    def set_observable(self):
         self.observable_value = False
         self.intensity_values = np.array(self.acquisition['intensities'][395:]) * (-1)
-        if method == 'Maximum':
+        if self.method == 'Maximum':
             observable_value = np.min(self.intensity_values)
-        elif method == 'Area':
+        elif self.method == 'Area':
             observable_value = np.mean(self.intensity_values[self.timeInterval[0]:self.timeInterval[1]])
             # self.valueList.append(observable_value)
-        elif method == 'Transmission':
+        elif self.method == 'Transmission':
             #            observable_value = (in_array[self.timeInterval[1]]/in_array[self.timeInterval[0]])
             observable_value = (self.intensity_values[self.timeInterval[0]])
             #            observable_value = (in_array[self.timeInterval[0]])
