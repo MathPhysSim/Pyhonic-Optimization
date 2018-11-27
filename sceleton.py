@@ -380,7 +380,7 @@ class Ui_MainWindow(object):
         self.label_12.setText(_translate("MainWindow", "Cycle selection"))
         self.label_11.setText(_translate("MainWindow", "Optimization method"))
         self.radioButtonPowell.setText(_translate("MainWindow", "Powell"))
-        self.radioButtonNelderMead.setText(_translate("MainWindow", "Nelder Mead"))
+        self.radioButtonNelderMead.setText(_translate("MainWindow", "Taxi cab"))
         self.label_2.setText(_translate("MainWindow", "fTol"))
         self.label.setText(_translate("MainWindow", "xTol"))
         self.label_10.setText(_translate("MainWindow", "Observable"))

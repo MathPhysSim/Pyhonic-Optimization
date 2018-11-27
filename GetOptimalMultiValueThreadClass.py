@@ -162,27 +162,27 @@ class getOptimalMultiValueThread(QThread):
         start_values = self.start_values
 
         if self.algorithmSelection == 'Powell':
+            print('Use Powell')
+            res = optimize.fmin_powell(self.set_function, start_values, xtol=self.xTol,
+                                       ftol=self.fTol,
+                                       direc=self.parameterClass.
+                                       getStartDirection())
+            if (len(res.shape) < 0) | (type(res) == float):
+                res = np.array([res])
+        else:
             bounds_delta = self.interval_bound
             bounds = [start_values[0] - bounds_delta, start_values[0] + bounds_delta]
             if start_values.shape[0] == 1:
-                print('Use fminbound')
-                res = optimize.fminbound(self.wrapper_fun, bounds[0], bounds[1], xtol=self.xTol)
-            if True:
-                self.taxi_cab(start_values)
-
+                    print('Use fminbound')
+                    res = optimize.fminbound(self.wrapper_fun, bounds[0], bounds[1], xtol=self.xTol)
             else:
-                print('Use Powell')
-                res = optimize.fmin_powell(self.set_function, start_values, xtol=self.xTol,
-                                           ftol=self.fTol,
-                                           direc=self.parameterClass.
-                                           getStartDirection())
-                if (len(res.shape) < 0) | (type(res) == float):
-                    res = np.array([res])
+                    self.taxi_cab(start_values)
+
         #            returnValue = res
-        else:
-            res = optimize.minimize(self.set_function, start_values, method='Nelder-Mead',
-                                    options={'xatol': self.xTol,
-                                             'fatol': self.fTol})
+        # else:
+        #     res = optimize.minimize(self.set_function, start_values, method='Nelder-Mead',
+        #                             options={'xatol': self.xTol,
+        #                                      'fatol': self.fTol})
         #            returnValue = res.x
         #        self.signals.setValues.emit(returnValue.tolist())
         self.signals.jobFinished.emit()

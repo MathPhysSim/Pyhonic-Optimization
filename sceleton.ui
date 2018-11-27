@@ -496,7 +496,7 @@
            <bool>true</bool>
           </property>
           <property name="text">
-           <string>Nelder Mead</string>
+           <string>Taxi cab</string>
           </property>
           <attribute name="buttonGroup">
            <string notr="true">buttonGroup</string>
