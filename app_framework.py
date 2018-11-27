@@ -63,11 +63,11 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.japc.setSelector("LEI.USER.MDEARLY")
         self.cycle = self.japc.getSelector()
         # TODO: For the intesity change back
-        # self.japc.subscribeParam("ER.BCTDC/Acquisition#intensities",
-        #                          self.onValueRecieved)
-
-        self.japc.subscribeParam("LEI.BQS.L/Acquisition",
+        self.japc.subscribeParam("ER.BCTDC/Acquisition#intensities",
                                  self.onValueRecieved)
+
+        # self.japc.subscribeParam("LEI.BQS.L/Acquisition",
+        #                          self.onValueRecieved)
         self.observable = ob.ObservableClass(self.japc, self.averageNrValue)
 
 
@@ -125,10 +125,10 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.japc.setSelector(id.text())
         self.japc.clearSubscriptions()
         # TODO: For the intesity change back
-        # self.japc.subscribeParam("ER.BCTDC/Acquisition#intensities",
-        #                          self.onValueRecieved)
-        self.japc.subscribeParam("LEI.BQS.L/Acquisition",
+        self.japc.subscribeParam("ER.BCTDC/Acquisition#intensities",
                                  self.onValueRecieved)
+        # self.japc.subscribeParam("LEI.BQS.L/Acquisition",
+        #                          self.onValueRecieved)
         print("Set to:", self.japc.getSelector())
         self.cycle = self.japc.getSelector()
     def itemsChanged(self):  # s is a str
