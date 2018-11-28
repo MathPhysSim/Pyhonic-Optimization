@@ -14,7 +14,7 @@ from sceleton import Ui_MainWindow
 
 class MyApp(QMainWindow, Ui_MainWindow):
 
-    japc = pyjapc.PyJapc(incaAcceleratorName="LEIR", noSet=False)
+    japc = pyjapc.PyJapc(incaAcceleratorName="LEIR", noSet=True)
     
     # japc.rbacLogin()
     averageNrValue = 1.
@@ -63,7 +63,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.japc.setSelector("LEI.USER.MDEARLY")
         self.cycle = self.japc.getSelector()
         # TODO: For the intesity change back
-        self.japc.subscribeParam("ER.BCTDC/Acquisition#intensities",
+        self.japc.subscribeParam("ER.BCTDC/Acquisition",
                                  self.onValueRecieved)
 
         # self.japc.subscribeParam("LEI.BQS.L/Acquisition",
@@ -125,7 +125,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.japc.setSelector(id.text())
         self.japc.clearSubscriptions()
         # TODO: For the intesity change back
-        self.japc.subscribeParam("ER.BCTDC/Acquisition#intensities",
+        self.japc.subscribeParam("ER.BCTDC/Acquisition",
                                  self.onValueRecieved)
         # self.japc.subscribeParam("LEI.BQS.L/Acquisition",
         #                          self.onValueRecieved)
@@ -194,12 +194,12 @@ class MyApp(QMainWindow, Ui_MainWindow):
                                        self.doubleSpinBoxMinimalAcceptedChange.value())
 
     def doubleSpinBoxObservableStartTimeChanged(self):
-        self.observable.timeInterval[0] = self.doubleSpinBoxObservableStartTime.value()
+        self.observable.time_interval[0] = self.doubleSpinBoxObservableStartTime.value()
         self.doubleSpinBoxObservableEndTime.\
-        setMinimum(self.observable.timeInterval[0] + 1)
+        setMinimum(self.observable.time_interval[0] + 1)
 
     def doubleSpinBoxObservableEndTimeChanged(self):
-        self.observable.timeInterval[1] = self.doubleSpinBoxObservableEndTime.value()
+        self.observable.time_interval[1] = self.doubleSpinBoxObservableEndTime.value()
 
     def doubleSpinBoxIntervalBoundsChanged(self):
         # self.interval_bound = self.doubleSpinBoxIntervalBounds.value()
@@ -215,7 +215,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         if (self.observableMethodSelection == 'Area') |\
            (self.observableMethodSelection == 'Transmission'):
             self.doubleSpinBoxObservableEndTime.\
-                 setMinimum(self.observable.timeInterval[0] + 1)
+                 setMinimum(self.observable.time_interval[0] + 1)
             self.doubleSpinBoxObservableStartTime.setEnabled(True)
             self.doubleSpinBoxObservableEndTime.setEnabled(True)
         else:

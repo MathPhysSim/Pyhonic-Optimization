@@ -20,10 +20,10 @@ class ObservableClass():
         self.dataWait = True
         self.dataLength = length
         self.method = 'Maximum'
-        self.timeInterval = np.array([0, 0])
+        self.time_interval = np.array([0, 0])
         # self.observableClass = ObservableClassSchottky(self.japc)
 
-        self.observableClass = ObservableClassIntensity(self.timeInterval, self.japc, self.method)
+        self.observableClass = ObservableClassIntensity(self.time_interval, self.japc, self.method)
 
     def setValue(self, data_acquisiton_in):
         observable_value = self.observableClass.create_observable(data_acquisiton_in)
@@ -104,9 +104,9 @@ class ObservableClassSchottky():
 
 class ObservableClassIntensity:
 
-    def __init__(self, timeInterval, japc_in, method):
+    def __init__(self, time_interval, japc_in, method):
 
-        self.timeInterval = timeInterval
+        self.timeInterval = time_interval
         self.japc = japc_in
         self.acquisition = None
         self.intensity_values = np.array([])
@@ -114,10 +114,10 @@ class ObservableClassIntensity:
         self.method = method
 
 
-    def acquireData(self, name, value):
+    def acquire_data(self, value):
             self.acquisition = value
 
-    def set_observable(self):
+    def process_data(self):
         self.observable_value = False
         self.intensity_values = np.array(self.acquisition['intensities'][395:]) * (-1)
         if self.method == 'Maximum':
@@ -129,14 +129,14 @@ class ObservableClassIntensity:
             #            observable_value = (in_array[self.timeInterval[1]]/in_array[self.timeInterval[0]])
             observable_value = (self.intensity_values[self.timeInterval[0]])
             #            observable_value = (in_array[self.timeInterval[0]])
-            normVal = self.japc.getParam("EI.BCT10/Acquisition#chargesLinacSingle")
-            if normVal > 0.15:
-                observable_value = (observable_value / normVal)
+            norm_val = self.japc.getParam("EI.BCT10/Acquisition#chargesLinacSingle")
+            if norm_val > 0.15:
+                observable_value = (observable_value / norm_val)
         return observable_value
 
     def create_observable(self, in_data):
-        self.acquireData(in_data)
+        self.acquire_data(in_data)
         return self.get_observable()
 
-    def get_observable(self, method):
-        return self.process_data(method)
+    def get_observable(self):
+        return self.process_data()
