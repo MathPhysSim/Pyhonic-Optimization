@@ -25,6 +25,10 @@ class ObservableClass():
 
         self.observableClass = ObservableClassIntensity(self.time_interval, self.japc, self.method)
 
+    def change_method(self, method):
+        self.method = method
+        self.observableClass.method = self.method
+
     def setValue(self, data_acquisiton_in):
         observable_value = self.observableClass.create_observable(data_acquisiton_in)
         self.valueList.append(observable_value)
@@ -112,7 +116,7 @@ class ObservableClassIntensity:
         self.intensity_values = np.array([])
         self.observable_value = False
         self.method = method
-
+        print('selected value', self.method)
 
     def acquire_data(self, value):
             self.acquisition = value

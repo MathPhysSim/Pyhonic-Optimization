@@ -128,7 +128,7 @@ class getOptimalMultiValueThread(QThread):
             self.observable.dataWait = True
             dataFinal = self.observable.dataOut
             #TODO: change back when change observable
-            intensity = self.observable.dataOut
+            intensity = self.observable.dataOut*(-1)
             error = self.observable.dataErrorOut
 
         self.nrCalls += 1

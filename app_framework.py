@@ -212,6 +212,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
 
     def buttonGroupObservableSelected(self, id):
         self.observableMethodSelection = id.text()
+
         if (self.observableMethodSelection == 'Area') |\
            (self.observableMethodSelection == 'Transmission'):
             self.doubleSpinBoxObservableEndTime.\
@@ -221,7 +222,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         else:
             self.doubleSpinBoxObservableStartTime.setEnabled(False)
             self.doubleSpinBoxObservableEndTime.setEnabled(False)
-        self.observable.method = id.text()
+        self.observable.change_method(id.text())
 
     def buttonRestoreOldValuesPressed(self):
         self.setValues(self.x0)
