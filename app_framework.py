@@ -14,7 +14,7 @@ from sceleton import Ui_MainWindow
 
 class MyApp(QMainWindow, Ui_MainWindow):
 
-    japc = pyjapc.PyJapc(incaAcceleratorName="LEIR", noSet=True)
+    japc = pyjapc.PyJapc(incaAcceleratorName="LEIR", noSet=False)
     
     # japc.rbacLogin()
     averageNrValue = 1.
